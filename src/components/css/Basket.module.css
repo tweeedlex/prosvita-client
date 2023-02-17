@@ -1,0 +1,21 @@
+html[data-theme="light"] {
+    --color: #000;
+}
+
+html[data-theme="dark"] {
+    --color: #fff;
+}
+
+.h1 {
+    text-align: center;
+    color: var(--color) !important;
+    font-weight: normal;
+    margin: 0 0 20px 0;
+}
+
+.items {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+

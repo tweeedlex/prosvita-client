@@ -1,0 +1,131 @@
+.header {
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  height: 50px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: flex-end;
+}
+
+.logo img {
+  width: 55px;
+  height: 50px;
+}
+
+.logo span {
+  position: relative;
+  left: -20px;
+  font-size: 28px;
+}
+
+.search {
+  width: 400px;
+  height: 40px;
+  border: 1px solid #ffffff;
+  border-radius: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.search input {
+  font-size: 18px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.search input::placeholder {
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.search img {
+  width: 20px;
+  height: 20px;
+}
+
+.navigation,
+.navigation ul {
+  height: 100%;
+}
+
+.navigation ul {
+  display: flex;
+  align-items: flex-end;
+  gap: 100px;
+}
+.navigation ul li a {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.navigation ul li:hover .hoverline {
+  opacity: 1;
+  margin: 5px auto 0 auto;
+}
+
+.hoverline {
+  opacity: 0;
+  display: flex;
+  margin: 0 auto 0 auto;
+  width: 75px;
+  height: 1px;
+  background-color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.active {
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  gap: 40px;
+}
+
+.actions button,
+.actions button img {
+  width: 40px;
+  height: 40px;
+}
+
+.popUp {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.popUpContent {
+  width: 320px;
+  height: 180px;
+  background: linear-gradient(231.77deg, #1e5c2c 39.01%, #12451e 97.94%);
+  border: 1px solid #ffffff;
+  border-radius: 40px;
+  z-index: 5;
+  position: absolute;
+  top: 120px;
+  right: 140px;
+  padding: 20px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}

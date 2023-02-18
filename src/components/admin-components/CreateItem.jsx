@@ -72,7 +72,7 @@ export const CreateItem = ({ types, brands }) => {
         Створити новий товар
       </button>
       <Modal visible={itemModalVisible} setVisible={setItemModalVisible}>
-        <div className={styles.createItemModal}>
+        <div className={modalStyles.formDefault}>
           <div className={modalStyles.required}>
             <input
               value={itemName}

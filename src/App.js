@@ -82,7 +82,7 @@ const App = observer(() => {
 
   return (
     <div className={`App ${location.pathname === "/catalog" || location.pathname.includes("/item") ? "backgrounded" : ""}`}>
-      <Header setIsAdmin={setIsAdmin} setIsManager={setIsManager} setEmail={setEmail}/>
+      <Header setIsAdmin={setIsAdmin} setIsManager={setIsManager} setEmail={setEmail} isAdmin={isAdmin} isManager={isManager} email={email}/>
 
       <div className="main">
         <Routes>

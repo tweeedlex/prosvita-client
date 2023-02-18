@@ -113,9 +113,9 @@
   z-index: 10;
 }
 
-.popUpContent {
-  width: 320px;
-  height: 180px;
+.popUpContent,
+.popUpContentUnlogined {
+  min-width: 320px;
   background: linear-gradient(231.77deg, #1e5c2c 39.01%, #12451e 97.94%);
   border: 1px solid #ffffff;
   border-radius: 40px;
@@ -124,8 +124,22 @@
   top: 120px;
   right: 140px;
   padding: 20px;
-  text-align: right;
   display: flex;
   flex-direction: column;
+}
+
+.popUpContent {
+  text-align: right;
   gap: 5px;
+}
+
+.popUpContentUnlogined {
+  text-align: center;
+  justify-content: center;
+  gap: 20px;
+  height: 180px;
+}
+
+.popUpContentUnlogined * {
+  font-size: 24px;
 }

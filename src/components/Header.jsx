@@ -5,25 +5,28 @@ import searchIcon from "../images/header/search.png";
 import cartIcon from "../images/header/cart.png";
 import profileIcon from "../images/header/profile.png";
 import { useLocation } from "react-router-dom";
+import { Login } from "./Login";
 
-export const Header = ({user, setEmail, setIsAdmin, setIsManager}) => {
+export const Header = (props) => {
   const location = useLocation();
 
-  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+  const [isPopUpOpened, setIsPopUpOpened] = useState(false);
+  const [isLoginOpened, setIsLoginOpened] = useState(false);
+  const [isRegistrationOpened, setIsRegistrationOpened] = useState(false);
 
   const togglePopup = () => {
-    setIsPopUpOpen(!isPopUpOpen);
-    const body = document.querySelector("body")
-    isPopUpOpen
-    ? body.classList.remove("locked")
-    : body.classList.add("locked")
+    setIsPopUpOpened(!isPopUpOpened);
+    const body = document.querySelector("body");
+    isPopUpOpened
+      ? body.classList.remove("locked")
+      : body.classList.add("locked");
   };
-  
+
   const logOut = () => {
     localStorage.setItem("user-token", "");
-    setEmail(undefined);
-    setIsAdmin(false);
-    setIsManager(false);
+    props.setEmail(undefined);
+    props.setIsAdmin(false);
+    props.setIsManager(false);
   };
 
   return (
@@ -84,19 +87,30 @@ export const Header = ({user, setEmail, setIsAdmin, setIsManager}) => {
           <button onClick={togglePopup} className="profile">
             <img src={profileIcon} alt="profile" />
           </button>
-          {isPopUpOpen && (
+          {isPopUpOpened && (
             <div className={styles.popUp} onClick={togglePopup}>
-              <div className={styles.popUpContent}>
-                {console.log(user)}
-                <p>Володимир</p>
-                <p>22a_avs@liceum.ztu.edu.ua</p> 
-                <a href="/">Мої замовлення</a> 
-                <a href="/admin">Адмін-панель</a>
-                <a onClick={() => logOut()}>Вийти</a>
-              </div>
+              {props.email ? (
+                <div className={styles.popUpContent}>
+                  <p>{props.email}</p>
+                  <a href="/">Мої замовлення</a>
+                  {props.isAdmin && <a href="/admin">Адмін-панель</a>}
+                  {props.isManager && <a href="/orders">Замовлення</a>}
+                  <a style={{ cursor: "pointer" }} onClick={() => logOut()}>
+                    Вийти
+                  </a>
+                </div>
+              ) : (
+                <div className={styles.popUpContentUnlogined}>
+                  <a onClick={() => setIsRegistrationOpened(true)}>
+                    Реєстрація
+                  </a>
+                  <a onClick={() => setIsLoginOpened(true)}>Вхід</a>
+                </div>
+              )}
             </div>
           )}
         </div>
+        <Login isOpened={isLoginOpened} setIsOpened={setIsLoginOpened} />
       </div>
     </header>
   );

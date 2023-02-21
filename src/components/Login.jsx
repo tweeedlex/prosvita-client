@@ -6,7 +6,7 @@ import { observer } from "mobx-react-lite";
 import { Modal } from "./Modal";
 import modalStyles from "./css/Modal.module.css";
 
-export const Login = observer(({ isOpened, setIsOpened }) => {
+export const Login = observer(({ isOpened, setIsOpened, getEmail, getRole }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -20,6 +20,8 @@ export const Login = observer(({ isOpened, setIsOpened }) => {
 
       localStorage.setItem("user-token", response.data);
       setIsOpened(false)
+      getEmail()
+      getRole()
     } catch (e) {
       alert(e.response.data.message);
     }

@@ -13,8 +13,8 @@
 }
 
 .button {
-  background: rgba(46, 92, 56, 0.7);
-  border: 3px solid #ffffff;
+  background-color: rgba(46, 92, 56, 0.7);
+  border: 2px solid #ffffff;
   border-radius: 40px;
   width: 700px;
   align-self: center;
@@ -23,6 +23,13 @@
   font-size: 24px;
   line-height: 29px;
   color: #fff;
+
+  transition: all 0.4s ease;
+}
+
+.button:hover {
+  background-color: #fff;
+  color: #2e5c38;
 }
 
 .createItem {

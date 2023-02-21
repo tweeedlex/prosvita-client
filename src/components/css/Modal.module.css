@@ -74,12 +74,20 @@
   font-weight: 500;
   font-size: 20px;
   line-height: 24px;
-  background: #ffffff;
+  background-color: #ffffff;
   color: #2e5c38;
   border-radius: 64px;
   height: 36px;
   align-self: flex-end;
+  border: 1px solid #fff;
   padding: 6px 15px;
+
+  transition: all 0.3s ease;
+}
+
+.action:hover {
+  background-color: #2e5c38;
+  color: #fff;
 }
 
 .required {

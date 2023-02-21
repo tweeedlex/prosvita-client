@@ -110,7 +110,7 @@ export const Header = (props) => {
             </div>
           )}
         </div>
-        <Login isOpened={isLoginOpened} setIsOpened={setIsLoginOpened} />
+        <Login isOpened={isLoginOpened} setIsOpened={setIsLoginOpened} getEmail={props.getEmail} getRole={props.getRole} />
       </div>
     </header>
   );

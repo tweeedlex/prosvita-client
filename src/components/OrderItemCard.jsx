@@ -1,17 +1,29 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { SERVER_URL } from '../config';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { SERVER_URL } from "../config";
+import styles from "../pages/css/OrdersPage.module.css";
 
 export const OrderItemCard = ({ item, amounts }) => {
   return (
-    <div style={{ margin: "10px 0" }}>
-      <h2>{item.name}</h2>
-      <p style={{ display: "flex", justifyContent: "space-between", minWidth: "520px", gap: "20px" }}>
-        <Link to={"/item/" + item.id}>Відкрити на сайті</Link>
-        <span>Кількість: {amounts.find(amountItem => amountItem.id === item.id).amount}</span>
-        <span>Ідентифікатор: {item.id}</span>
-      </p>
+    <div className={styles.item}>
+      <div
+        className={styles.itemImage}
+        style={{
+          background: `url(${item.img}) center center/contain no-repeat`,
+        }}
+      ></div>
+      <div className={styles.itemInfo}>
+        <Link to={"/item/" + item.id}>
+          {item.name.length < 44 ? item.name : `${item.name.substr(0, 44)}..`}
+        </Link>
+        <span>
+          Кількість:{" "}
+          {amounts.find((amountItem) => amountItem.id === item.id).amount}
+        </span>
+        <span>Код: {item.id}</span>
+        <span>Ціна: {item.price}₴</span>
+      </div>
     </div>
-  )
-}
+  );
+};

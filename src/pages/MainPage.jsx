@@ -112,12 +112,12 @@ export const MainPage = () => {
               <p>Відстуні товари за Вашими фільтрами</p>
             )}
           </div>
-          <ul className={styles.pagination}>
+          <ul className="pagination">
             {pages.length > 1 &&
               pages.map((page) => (
                 <li
                   key={page}
-                  className={`${styles.page} ${page === selectedPage ? styles.selected : ""}`}
+                  className={`page ${page === selectedPage ? "selected" : ""}`}
                 >
                   <button onClick={() => changePage(page)}>{page}</button>
                 </li>
@@ -125,66 +125,6 @@ export const MainPage = () => {
           </ul>
         </div>
       </div>
-
-      {/* <div>
-        <button onClick={() => toggleFilters()}>
-          <span>Фільтри</span>
-        </button>
-
-        <div className={`filters ${areFiltersActive && "active"}`}>
-          <div>
-            <button onClick={() => resetFilters()}>Скинути фільтри</button>
-            <button onClick={() => toggleFilters()}></button>
-          </div>
-
-          <Types
-            setSelectedPage={setSelectedPage}
-            setPages={setPages}
-            setItems={setItems}
-            selectedType={selectedType}
-            selectedBrand={selectedBrand}
-            setSelectedType={setSelectedType}
-          />
-
-          <h3 style={{ margin: "0 0 10px 0" }} className="black-tablet">
-            Викладачі
-          </h3>
-          <Brands
-            setSelectedPage={setSelectedPage}
-            setPages={setPages}
-            setItems={setItems}
-            selectedBrand={selectedBrand}
-            selectedType={selectedType}
-            setSelectedBrand={setSelectedBrand}
-          />
-        </div>
-
-        <div className="cards cards__main">
-          {isLoading ? (
-            <div className="loader"></div>
-          ) : items.length ? (
-            items.map((item) => (
-              <Item classN="card__main" key={item.id} item={item} />
-            ))
-          ) : (
-            <div style={{ textAlign: "center", width: "100%" }}>
-              Відстуні товари за Вашими фільтрами
-            </div>
-          )}
-        </div>
-      </div>
-
-      <ul className="pages">
-        {
-          pages.length > 1 &&
-          pages.map(page =>
-            <li key={page} className={`page ${page === selectedPage ? "selected" : ""}`}>
-              <button onClick={() => changePage(page)} className='button-default'>
-                {page}
-              </button>
-            </li>
-          )}
-      </ul> */}
     </div>
   );
 };

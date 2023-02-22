@@ -6,10 +6,13 @@ import cartIcon from "../images/header/cart.png";
 import profileIcon from "../images/header/profile.png";
 import { useLocation } from "react-router-dom";
 import { Login } from "./Login";
+import { Registration } from "./Registration";
+import { Basket } from "./Basket";
 
 export const Header = (props) => {
   const location = useLocation();
 
+  const [isBasketOpened, setIsBasketOpened] = useState(false);
   const [isPopUpOpened, setIsPopUpOpened] = useState(false);
   const [isLoginOpened, setIsLoginOpened] = useState(false);
   const [isRegistrationOpened, setIsRegistrationOpened] = useState(false);
@@ -81,7 +84,7 @@ export const Header = (props) => {
         </nav>
 
         <div className={styles.actions}>
-          <button className="basket">
+          <button onClick={() => setIsBasketOpened(true)} className="basket">
             <img src={cartIcon} alt="basket" />
           </button>
           <button onClick={togglePopup} className="profile">
@@ -110,7 +113,20 @@ export const Header = (props) => {
             </div>
           )}
         </div>
-        <Login isOpened={isLoginOpened} setIsOpened={setIsLoginOpened} getEmail={props.getEmail} getRole={props.getRole} />
+        <Basket 
+          isOpened={isBasketOpened}
+          setIsOpened={setIsBasketOpened}
+        />
+        <Login
+          isOpened={isLoginOpened}
+          setIsOpened={setIsLoginOpened}
+          getEmail={props.getEmail}
+          getRole={props.getRole}
+        />
+        <Registration
+          isOpened={isRegistrationOpened}
+          setIsOpened={setIsRegistrationOpened}
+        />
       </div>
     </header>
   );

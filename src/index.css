@@ -118,7 +118,8 @@ h2 {
   min-height: 100vh;
 }
 
-.locked, .lock {
+.locked,
+.lock {
   overflow: hidden;
 }
 
@@ -137,4 +138,19 @@ h3 {
 
 a {
   cursor: pointer;
+}
+
+.button-transparent {
+  border: 2px solid #ffffff;
+  border-radius: 30px;
+  font-weight: 500;
+  font-weight: 500;
+  font-size: 20px;
+
+  transition: all 0.3s ease;
+}
+
+.button-transparent:hover {
+  color: #2e5c38;
+  background-color: #fff;
 }

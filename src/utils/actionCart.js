@@ -3,6 +3,7 @@ import { SERVER_URL } from "../config"
 
 const actionCart = async (action, item) => {
     try {
+        console.log(item)
         const response = await axios.post(SERVER_URL + `/api/basket/${action}?itemId=` + item.id, {}, {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem("user-token"),

@@ -1,21 +1,125 @@
-html[data-theme="light"] {
-    --color: #000;
+.basket {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 10px 0 0 0;
+  position: relative;
+  overflow-x: hidden;
 }
 
-html[data-theme="dark"] {
-    --color: #fff;
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
-.h1 {
+.buttons button {
+  width: 175px;
+  height: 45px;
+}
+
+.p {
     text-align: center;
-    color: var(--color) !important;
-    font-weight: normal;
-    margin: 0 0 20px 0;
+    margin: 20px 0 0 0;
 }
 
-.items {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+.items::before,
+.item::before {
+  content: "";
+  position: absolute;
+  left: -20px;
+  width: calc(100% + 40px);
+  height: 2px;
+  background-color: #fff;
 }
 
+.item::before {
+  bottom: 0;
+}
+
+.item {
+  display: flex;
+  width: 700px;
+  padding: 20px 10px;
+  position: relative;
+  gap: 20px;
+}
+
+.image {
+  width: 115px;
+  height: 150px;
+}
+
+.itemName {
+  font-weight: 500;
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.itemActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  gap: 20px;
+}
+
+.amount {
+  flex: 1 1 auto;
+}
+
+.amount div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+  max-width: 95px;
+}
+
+.amount p {
+  min-width: 30px;
+  text-align: center;
+}
+
+.amount * {
+  font-size: 28px;
+}
+
+.categories {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  gap: 10px;
+}
+
+.money {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.money button img {
+  width: 32px;
+  height: 32px;
+}
+
+.money button {
+  position: relative;
+}
+
+.money button::after {
+  content: url("../../images/cross.png");
+  position: absolute;
+  right: 15px;
+}
+
+.price {
+  font-weight: 500;
+  font-size: 28px;
+}

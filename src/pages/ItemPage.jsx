@@ -86,10 +86,10 @@ export const ItemPage = ({ isAdmin }) => {
           <h2 className={styles.h2}>{item.name}</h2>
           <div className={styles.shortInfo}>
             <div className={styles.leftColumn}>
-              <Link to={`/brand/${item.brandId}`}>
+              <Link>
                 {brand.length < 18 ? brand : `${brand.substr(0, 18)}..`}
               </Link>
-              <Link to={`/type/${item.typeId}`}>
+              <Link>
                 {type.length < 18 ? type : `${type.substr(0, 18)}..`}
               </Link>
               <p className={styles.id}>Ідентифікатор: {item.id}</p>

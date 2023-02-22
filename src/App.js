@@ -68,7 +68,6 @@ const App = observer(() => {
     }
   };
 
-
   const { theme, setTheme } = useTheme();
 
   const changeTheme = () => {
@@ -81,8 +80,26 @@ const App = observer(() => {
   const [basketModalVisible, setBasketModalVisible] = useState(false);
 
   return (
-    <div className={`App ${location.pathname === "/catalog" || location.pathname.includes("/item") ? "backgrounded" : ""}`}>
-      <Header getRole={getRole} getEmail={getEmail} setIsAdmin={setIsAdmin} setIsManager={setIsManager} setEmail={setEmail} isAdmin={isAdmin} isManager={isManager} email={email}/>
+    <div
+      className={`App ${
+        location.pathname === "/admin" ||
+        location.pathname === "/orders" ||
+        location.pathname === "/catalog" ||
+        location.pathname.includes("/item")
+          ? "backgrounded"
+          : ""
+      }`}
+    >
+      <Header
+        getRole={getRole}
+        getEmail={getEmail}
+        setIsAdmin={setIsAdmin}
+        setIsManager={setIsManager}
+        setEmail={setEmail}
+        isAdmin={isAdmin}
+        isManager={isManager}
+        email={email}
+      />
 
       <div className="main">
         <Routes>

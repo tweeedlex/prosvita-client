@@ -63,14 +63,12 @@
 .navigation ul {
   height: 100%;
   max-width: 500px;
-  width: 100%;
 }
 
 .navigation ul {
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
-  gap: 40px;
+  gap: 80px;
 }
 
 .navigation ul li a {

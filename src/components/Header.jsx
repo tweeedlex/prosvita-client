@@ -14,9 +14,12 @@ export const Header = (props) => {
 
   const [isBasketOpened, setIsBasketOpened] = useState(false);
   const [isPopUpOpened, setIsPopUpOpened] = useState(false);
+  const [isMenuActive, setIsMenuActive] = useState()
   const [isLoginOpened, setIsLoginOpened] = useState(false);
   const [isRegistrationOpened, setIsRegistrationOpened] = useState(false);
 
+  let body = document.querySelector("body")
+  
   const togglePopup = () => {
     setIsPopUpOpened(!isPopUpOpened);
     const body = document.querySelector("body");
@@ -31,6 +34,15 @@ export const Header = (props) => {
     props.setIsAdmin(false);
     props.setIsManager(false);
   };
+
+  const toggleMenu = () => {
+    if (isMenuActive) {
+      setIsMenuActive(false)
+      return body.classList = "lock"
+    }
+    setIsMenuActive(true)
+    body.classList = ("")
+  }
 
   return (
     <header className={styles.header}>
@@ -84,11 +96,14 @@ export const Header = (props) => {
         </nav>
 
         <div className={styles.actions}>
-          <button onClick={() => setIsBasketOpened(true)} className="basket">
+          <button onClick={() => setIsBasketOpened(true)}>
             <img src={cartIcon} alt="basket" />
           </button>
-          <button onClick={togglePopup} className="profile">
+          <button onClick={togglePopup}>
             <img src={profileIcon} alt="profile" />
+          </button>
+          <button onClick={() => toggleMenu()} className={styles.burger + " " + (isMenuActive ? styles.active : "")}>
+            <span></span>
           </button>
           {isPopUpOpened && (
             <div className={styles.popUp} onClick={togglePopup}>
@@ -98,7 +113,7 @@ export const Header = (props) => {
                   <a href="/">Мої замовлення</a>
                   {props.isAdmin && <a href="/admin">Адмін-панель</a>}
                   {props.isManager && <a href="/orders">Замовлення</a>}
-                  <a style={{ cursor: "pointer" }} onClick={() => logOut()}>
+                  <a onClick={() => logOut()}>
                     Вийти
                   </a>
                 </div>

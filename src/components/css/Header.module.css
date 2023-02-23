@@ -10,6 +10,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  gap: 40px;
 }
 
 .logo {
@@ -29,7 +30,8 @@
 }
 
 .search {
-  width: 400px;
+  max-width: 400px;
+  width: 100%;
   height: 40px;
   border: 1px solid #ffffff;
   border-radius: 64px;
@@ -49,6 +51,7 @@
 .search input::placeholder {
   font-size: 18px;
   color: #ffffff;
+  margin: 0 10px 0 0;
 }
 
 .search img {
@@ -59,16 +62,21 @@
 .navigation,
 .navigation ul {
   height: 100%;
+  max-width: 500px;
+  width: 100%;
 }
 
 .navigation ul {
   display: flex;
   align-items: flex-end;
-  gap: 100px;
+  justify-content: space-between;
+  gap: 40px;
 }
+
 .navigation ul li a {
   font-size: 24px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .navigation ul li:hover .hoverline {
@@ -93,6 +101,7 @@
 .actions {
   display: flex;
   gap: 40px;
+  align-items: center;
 }
 
 .actions button,
@@ -142,4 +151,47 @@
 
 .popUpContentUnlogined * {
   font-size: 24px;
+}
+
+.burger {
+  width: 32px!important;
+  height: 20px!important;
+  flex-direction: column;
+  justify-content: space-between;
+  
+  display: none;
+}
+
+.burger::after,
+.burger::before,
+.burger>span {
+  content: "";
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+  position: relative;
+  top: 0;
+  z-index: 3;
+
+  transition: transform 0.3s ease, opacity 0.3s ease, top 0.3s ease;
+}
+
+.burger.active::after {
+  transform: rotate(45deg);
+  top: -9px;
+}
+
+.burger.active::before {
+  transform: rotate(-45deg);
+  top: 9px;
+}
+
+.burger.active>span {
+  opacity: 0;
+}
+
+@media (max-width: 1023px) {
+  .burger {
+    display: flex;
+  }
 }

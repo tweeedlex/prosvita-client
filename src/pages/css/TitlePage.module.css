@@ -113,6 +113,7 @@ h1 {
 .cards {
   display: flex;
   gap: 80px;
+  justify-content: center;
 }
 
 .card {

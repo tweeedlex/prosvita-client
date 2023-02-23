@@ -93,7 +93,7 @@ export const Item = observer(({ item, classN }) => {
                 </button>
               )
             ) : (
-              <button onClick={() => navigate("/login")}>
+              <button onClick={() => alert("Авторизуйтесь")}>
                 <img src={cartImage} alt="cart" />
               </button>
             )}

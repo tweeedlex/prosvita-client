@@ -126,7 +126,7 @@ export const ItemPage = ({ isAdmin }) => {
                   </button>
                 )
               ) : (
-                <button onClick={() => navigate("/login")}>
+                <button onClick={() => alert("Авторизуйтесь")}>
                   <p>В кошик</p>
                   <img src={cartImage} alt="cart" />
                 </button>

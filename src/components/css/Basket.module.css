@@ -4,7 +4,16 @@
   gap: 30px;
   padding: 10px 0 0 0;
   position: relative;
+}
+
+.oxh {
   overflow-x: hidden;
+}
+
+.oh {
+  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .buttons {

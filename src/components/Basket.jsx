@@ -5,11 +5,9 @@ import fetchBasket from "../utils/fetchBasket";
 import styles from "./css/Basket.module.css";
 import { BasketItem } from "./BasketItem";
 import { Modal } from "./Modal";
+import { OrderForm } from "./OrderForm";
 
-export const Basket = ({
-  isOpened,
-  setIsOpened
-}) => {
+export const Basket = ({ isOpened, setIsOpened }) => {
   const [isAuth, setIsAuth] = useState(false);
   const [basket, setBasket] = useState([]);
   const [buyModalVisible, setBuyModalVisible] = useState(false);
@@ -50,13 +48,7 @@ export const Basket = ({
       },
     });
 
-    // clear basket
-    await axios.delete(SERVER_URL + "/api/basket/removeAll", {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("user-token"),
-      },
-    });
-    setBasket([]);
+    clearBasket();
 
     alert("Ваше замовлення в обробці");
   };
@@ -91,75 +83,43 @@ export const Basket = ({
     setOrderPrice(result);
   };
 
+  const clearBasket = async () => {
+    await axios.delete(SERVER_URL + "/api/basket/removeAll", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("user-token"),
+      },
+    });
+    setBasket([]);
+  };
+
   return (
     <Modal zIndex={12} visible={isOpened} setVisible={setIsOpened}>
-      <div className={styles.basket}>
+      <div
+        className={styles.basket + " " + (basket?.length !== 0 && styles.oxh)}
+      >
         <h2>Кошик</h2>
         {isAuth && basket && basket.length !== 0 && (
           <div>
             <div className={styles.buttons}>
-              <button className="button-transparent ">Очистити</button>
-              <button className="button-transparent " onClick={() => prepareToBuy()}>Замовити</button>
+              <button
+                className="button-transparent "
+                onClick={() => clearBasket()}
+              >
+                Очистити
+              </button>
+              <button
+                className="button-transparent "
+                onClick={() => prepareToBuy()}
+              >
+                Замовити
+              </button>
             </div>
-            <Modal
-              visible={buyModalVisible}
-              setVisible={setBuyModalVisible}
-              zIndex={5}
-            >
-              <h2>Контактні дані отримувача</h2>
-              <div>
-                <input
-                  value={surname}
-                  onChange={(e) => setSurname(e.target.value)}
-                  type="text"
-                  placeholder="Прізвище"
-                />
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  type="text"
-                  placeholder="Ім'я"
-                />
-                <input
-                  value={fathersName}
-                  onChange={(e) => setFathersName(e.target.value)}
-                  type="text"
-                  placeholder="По батькові"
-                />
-                <input
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  type="tel"
-                  placeholder="Телефон"
-                />
-              </div>
-
-              <h2>Метод доставки</h2>
-              <div>
-                <select
-                  onChange={(e) => setDeliveryMethod(e.target.value)}
-                  name="delivery-method"
-                >
-                  <option>Кур'єр</option>
-                  <option>Відділення пошти</option>
-                </select>
-                <input
-                  value={deliveryAddress}
-                  onChange={(e) => setDeliveryAddress(e.target.value)}
-                  type="text"
-                  placeholder={
-                    deliveryMethod === "Кур'єр"
-                      ? "Адреса доставки"
-                      : "Адреса поштового відділення"
-                  }
-                />
-              </div>
-              <p>Вартість замовлення: {orderPrice}₴</p>
-
-              <div>
-                <button onClick={() => buy()}>Замовити</button>
-              </div>
-            </Modal>
+            <OrderForm
+              buyModalVisible={buyModalVisible}
+              setBuyModalVisible={setBuyModalVisible}
+              orderPrice={orderPrice}
+              clearBasket={clearBasket}
+            />
           </div>
         )}
         <div className={styles.items}>

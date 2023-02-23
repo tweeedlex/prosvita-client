@@ -48,7 +48,7 @@ export const Order = ({ order }) => {
   };
 
   return (
-    <div className={styles.order}>
+    <div className={styles.order} key={order.id}>
       <div className={styles.orderInfo}>
         <p>{`${order.surname} ${order.name} ${order.fathersName}`}</p>
         <p>ID замовлення: {order.id}</p>

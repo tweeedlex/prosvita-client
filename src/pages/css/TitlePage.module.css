@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   gap: 30px;
-  width: 34.875%; /* 558/1600 */
+  width: 558px; /* 558/1600 */
 }
 
 h1 {
@@ -67,7 +67,7 @@ h1 {
   right: 0;
 }
 
-.desk {
+.board {
   width: 47.4vw; /* 910/1920 */
   right: 120px;
   top: 120px;
@@ -75,9 +75,9 @@ h1 {
 }
 
 .teacher {
-  top: 0;
-  height: 739px;
-  right: 240px;
+  top: calc(100vh-78vh);
+  height: 78vh;
+  right: 10vw;
   z-index: 3;
 }
 
@@ -95,13 +95,13 @@ h1 {
 .transition {
   width: 100vw;
   position: relative;
-  top: -30px;
+  height: 140px;
   z-index: 4;
 }
 
 .catalog {
   position: relative;
-  top: -80px;
+  top: -40px;
   background: url("../../images/background.png");
   z-index: 5;
 }
@@ -202,4 +202,138 @@ h1 {
   background: rgba(255, 255, 255, 0.25);
   filter: blur(100px);
   z-index: 1;
+}
+
+@media (max-width: 1280px) {
+  h1 {
+    font-size: 56px;
+    line-height: 68px;
+  }
+
+  .subtitle {
+    font-size: 28px;
+  }
+
+  .view {
+    font-size: 28px;
+    padding: 12px 24px;
+    width: 260px;
+
+    transition: background-color 0.3s ease;
+  }
+
+  .text {
+    gap: 15px;
+  }
+
+  .teacher {
+    right: 5vw;
+  }
+  
+  .board {
+    right: 2vw;
+  }
+}
+
+@media (max-width: 1023px) {
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  .hero {
+    align-items: flex-start;
+  }
+
+  .text {
+    text-align: center;
+    align-items: center;
+  }
+
+  .teacher, .media::after {
+    top: 330px;
+    height: 400px;
+    width: 315px;
+    right: calc(50vw - 150px);
+  }
+
+  .media::after {
+    top: 230px;
+    height: 300px;
+  }
+
+  .board {
+    top: 380px;
+    width: 460px;
+    right: calc(50vw - 230px);
+  }
+
+  .hero {
+    height: 670px;
+  }
+}
+
+@media (max-width: 767px) {
+  .text {
+    gap: 10px;
+  }
+
+  .h1 {
+    font-size: 48px;
+  }
+
+  .subtitle {
+    font-size: 24px;
+  }
+
+  .view {
+    width: 220px;
+    font-size: 24px;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 479px) {
+  .text {
+    gap: 8px;
+  }
+
+  .h1 {
+    font-size: 36px;
+    line-height: 54px;
+  }
+
+  .subtitle {
+    font-size: 20px;
+  }
+
+  .view {
+    width: 180px;
+    font-size: 20px;
+    padding: 5px 15px;
+  }
+
+  .teacher, .media::after {
+    top: 270px;
+    height: 360px;
+    width: 285px;
+    right: calc(50vw - 140px);
+  }
+
+  .media::after {
+    top: 210px;
+    height: 270px;
+  }
+
+  .board {
+    top: 340px;
+    width: calc(100vw - 10px);
+    right: calc(50vw - (100vw - 10px) / 2);
+  }
+
+  .hero {
+    height: 570px;
+  }
 }

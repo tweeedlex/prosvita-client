@@ -1,7 +1,6 @@
 import axios from "axios";
 import { Route, Routes } from "react-router";
 import { useLocation } from "react-router-dom";
-import { BasketPage } from "./pages/BasketPage";
 import { ItemPage } from "./pages/ItemPage";
 import { MainPage } from "./pages/MainPage";
 import { observer } from "mobx-react-lite";
@@ -99,7 +98,6 @@ const App = observer(() => {
           <Route path="/" element={<TitlePage />} />
           <Route path="/catalog" element={<MainPage />} />
           <Route path="/item/:id" element={<ItemPage isAdmin={isAdmin} />} />
-          <Route path="/basket" element={<BasketPage />} />
           {isAdmin && <Route path="/admin" element={<AdminPage />} />}
           {isManager && <Route path="/orders" element={<OrdersPage />} />}
         </Routes>

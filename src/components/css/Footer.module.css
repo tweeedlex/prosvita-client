@@ -33,3 +33,23 @@
 .emailIcon {
   margin: 0 10px 0 0;
 }
+
+@media (max-width: 1023px) {
+  .container {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .footer, .container {
+    height: unset;
+  }
+
+  .container {
+    padding: 0 0 30px 0;
+  }
+
+  .container * {
+    text-align: center;
+    font-size: 16px;
+  }
+}

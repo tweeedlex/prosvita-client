@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./css/TitlePage.module.css";
-import deskImage from "../images/hero/desk.png";
+import boardImage from "../images/hero/board.png";
 import teacherImage from "../images/hero/teacher.png";
 import transition from "../images/transition.png";
 import transition2 from "../images/transition2.png";
@@ -13,7 +13,7 @@ export const TitlePage = () => {
   return (
     <>
       <section className={styles.hero}>
-        <div className="hero__container">
+        <div className={"container " + styles.container}>
           <div className={styles.text}>
             <h1 className={styles.h1}>Здобувай знання легше</h1>
             <p className={styles.subtitle}>
@@ -23,7 +23,7 @@ export const TitlePage = () => {
           </div>
         </div>
         <div className={styles.media}>
-          <img className={styles.desk} src={deskImage} alt="Desk" />
+          <img className={styles.board} src={boardImage} alt="Desk" />
           <img className={styles.teacher} src={teacherImage} alt="Teacher" />
         </div>
       </section>

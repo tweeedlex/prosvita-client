@@ -75,7 +75,6 @@ h1 {
 }
 
 .teacher {
-  top: calc(100vh-78vh);
   height: 78vh;
   right: 10vw;
   z-index: 3;

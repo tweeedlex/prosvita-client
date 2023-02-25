@@ -30,6 +30,7 @@ export const Header = (props) => {
 
   const logOut = () => {
     localStorage.setItem("user-token", "")
+    console.log(localStorage.getItem("user-token"))
     props.userContext.setUser({})
   };
 

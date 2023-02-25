@@ -1,7 +1,5 @@
-import axios from "axios";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { SERVER_URL } from "../config";
+import { register } from "../http/userAPI";
 import modalStyles from "./css/Modal.module.css";
 import { Modal } from "./Modal";
 
@@ -10,25 +8,24 @@ export const Registration = ({ isOpened, setIsOpened }) => {
   const [password, setPassword] = useState("");
   const [repeatedPassword, setRepeatedPassword] = useState("");
 
-  const navigate = useNavigate();
 
-  const register = async (e) => {
-    e.preventDefault();
-
+  const registerHandler = async (e) => {
     try {
       if (password !== repeatedPassword) {
         return alert("Паролі не збігаються");
       }
 
-      const response = await axios.post(SERVER_URL + "/api/user/registration", {
-        email,
-        password,
-      });
+      const response = await register(email, password, repeatedPassword)
+      console.log(response)
 
-      if (response.data.message) {
-        alert(response.data.message + `\nАвторизуйтесь через "Вхід"`);
+      if (response.status === 200) {
+        alert(`Ви успішно зареєструвались!\nАвторизуйтесь через "Вхід"`);
       }
     } catch (e) {
+      if (e.response.data.message) {
+        return alert("Такий користувач вже існує")
+      }
+
       let message = "";
       for (let error of e.response.data.errors) {
         message += `${
@@ -44,7 +41,7 @@ export const Registration = ({ isOpened, setIsOpened }) => {
 
   return (
     <Modal zIndex={12} visible={isOpened} setVisible={setIsOpened}>
-      <form className={modalStyles.formDefault}>
+      <div className={modalStyles.formDefault}>
         <input
           placeholder="Електронна пошта"
           onChange={(e) => {
@@ -72,10 +69,10 @@ export const Registration = ({ isOpened, setIsOpened }) => {
           type="password"
           className={modalStyles.input}
         />
-        <button className={modalStyles.action} onClick={(e) => register(e)}>
+        <button className={modalStyles.action} onClick={(e) => registerHandler(e)}>
           Зареєструватися
         </button>
-      </form>
+      </div>
     </Modal>
   );
 };

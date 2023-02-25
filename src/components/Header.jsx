@@ -29,10 +29,8 @@ export const Header = (props) => {
   };
 
   const logOut = () => {
-    localStorage.setItem("user-token", "");
-    props.setEmail(undefined);
-    props.setIsAdmin(false);
-    props.setIsManager(false);
+    localStorage.setItem("user-token", "")
+    props.userContext.setUser({})
   };
 
   const toggleMenu = () => {
@@ -119,12 +117,12 @@ export const Header = (props) => {
           </button>
           {isPopUpOpened && (
             <div className={styles.popUp} onClick={togglePopup}>
-              {props.email ? (
+              {props.userContext.user.email ? (
                 <div className={styles.popUpContent}>
-                  <p>{props.email}</p>
+                  <p>{props.userContext.user.email}</p>
                   <a href="/">Мої замовлення</a>
-                  {props.isAdmin && <a href="/admin">Адмін-панель</a>}
-                  {props.isManager && <a href="/orders">Замовлення</a>}
+                  {props.userContext.user.role === "ADMIN" && <a href="/admin">Адмін-панель</a>}
+                  {props.userContext.user.role === "MANAGER" && <a href="/orders">Замовлення</a>}
                   <a onClick={() => logOut()}>Вийти</a>
                 </div>
               ) : (

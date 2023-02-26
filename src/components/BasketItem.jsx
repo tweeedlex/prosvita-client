@@ -24,29 +24,14 @@ export const BasketItem = observer(
       }
 
       loadItem();
-
-      loadAmount();
     }, []);
 
     const loadItem = () => {
-      setBrand(itemContext.brands.find((brand) => brand.id === item.brandId)?.name);
+      setBrand(
+        itemContext.brands.find((brand) => brand.id === item.brandId)?.name
+      );
       setType(itemContext.types.find((type) => type.id === item.typeId)?.name);
-    };
-
-    const loadAmount = async () => {
-      try {
-        const { data: amount } = await axios.get(
-          SERVER_URL + `/api/basket/amount?itemId=${item.id}`,
-          {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("user-token"),
-            },
-          }
-        );
-        setAmount(amount);
-      } catch (e) {
-        console.log(e);
-      }
+      setAmount(itemContext.basket.basketItems.find((basketItem) => basketItem.itemId === item.id).amount);
     };
 
     const [amount, setAmount] = useState(1);
@@ -106,7 +91,6 @@ export const BasketItem = observer(
             <div className={styles.itemActions}>
               <div className={styles.categories}>
                 <Link onClick={() => setBasketModalVisible(false)}>
-                  {console.log(brand)}
                   {brand}
                 </Link>
                 <Link onClick={() => setBasketModalVisible(false)}>{type}</Link>

@@ -25,7 +25,8 @@ const fetchBasket = async (setIsAuth) => {
         }
 
         response = await axios.get(SERVER_URL + `/api/item?itemList=${itemList}`)
-        return response.data
+        const data = response.data
+        return {data, basketItems}
     } catch (e) {
         console.log(e)
     }

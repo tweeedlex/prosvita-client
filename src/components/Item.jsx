@@ -11,7 +11,7 @@ import checkImage from "../images/catalog/check.png";
 
 import { Context } from "../index";
 
-export const Item = observer(({ item, isBasketLoading }) => {
+export const Item = observer(({ item }) => {
   const [itemInBasket, setItemInBasket] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -23,7 +23,7 @@ export const Item = observer(({ item, isBasketLoading }) => {
 
   const loadItem = async () => {
     try {
-      itemContext.basket.find(basketItem => basketItem.id === item.id) && setItemInBasket(true);
+      itemContext.basket.data.find(basketItem => basketItem.id === item.id) && setItemInBasket(true);
     } catch (e) {
       console.log(e);
     }
@@ -37,7 +37,7 @@ export const Item = observer(({ item, isBasketLoading }) => {
 
   return (
     <>
-      {isLoading || isBasketLoading ? (
+      {isLoading || !itemContext.basket ? (
         <div key={item.id} className={"loading " + styles.card}>
           <div className="loader"></div>
         </div>

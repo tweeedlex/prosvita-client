@@ -20,39 +20,6 @@ export const Basket = ({ isOpened, setIsOpened }) => {
     fetchBasket(setIsAuth).then((basket) => setBasket(basket));
   }, [isOpened]);
 
-  const buy = async () => {
-    const { data: rawItems } = await axios.get(SERVER_URL + "/api/basket", {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("user-token"),
-      },
-    });
-
-    let items = [];
-    rawItems.map((item) =>
-      items.push({ id: item.itemId, amount: item.amount })
-    );
-
-    const data = {
-      items,
-      name,
-      surname,
-      fathersName,
-      phone,
-      deliveryMethod,
-      deliveryAddress,
-    };
-
-    await axios.post(SERVER_URL + "/api/order", data, {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("user-token"),
-      },
-    });
-
-    clearBasket();
-
-    alert("Ваше замовлення в обробці");
-  };
-
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [fathersName, setFathersName] = useState("");
@@ -124,8 +91,8 @@ export const Basket = ({ isOpened, setIsOpened }) => {
         )}
         <div className={styles.items}>
           {isAuth ? (
-            basket && basket.length !== 0 ? (
-              basket.map((item) => (
+            basket && basket?.data?.length !== 0 ? (
+              basket?.data?.map((item) => (
                 <BasketItem
                   setBasketModalVisible={setIsOpened}
                   key={item.id}

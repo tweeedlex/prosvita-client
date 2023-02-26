@@ -21,12 +21,10 @@ export const MainPage = observer(() => {
   const [selectedType, setSelectedType] = useState(null);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isBasketLoading, setIsBasketLoading] = useState(true);
 
   const { item } = useContext(Context);
 
   useEffect(() => {
-    fetchBasket().then((data) => item.setBasket(data)).then(() => setIsBasketLoading(false));
     fetchItems(null, null, 1, 24).then((data) => {
       item.setItems(data.rows);
       item.setTotalCount(data.count);
@@ -117,7 +115,7 @@ export const MainPage = observer(() => {
                 <div className="loading"></div>
               </div>
             ) : item.items.length ? (
-              item.items.map((item) => <Item key={item.id} item={item} isBasketLoading={isBasketLoading} />)
+              item.items.map((item) => <Item key={item.id} item={item} />)
             ) : (
               <p>Відстуні товари за Вашими фільтрами</p>
             )}

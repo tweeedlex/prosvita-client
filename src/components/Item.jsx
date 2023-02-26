@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import actionCart from "../utils/actionCart";
 import axios from "axios";
@@ -9,56 +9,35 @@ import styles from "./css/Item.module.css";
 import cartImage from "../images/catalog/cart.png";
 import checkImage from "../images/catalog/check.png";
 
-export const Item = observer(({ item, classN }) => {
-  const [brand, setBrand] = useState("");
-  const [type, setType] = useState("");
+import { Context } from "../index";
+
+export const Item = observer(({ item, isBasketLoading }) => {
   const [itemInBasket, setItemInBasket] = useState(false);
-  const [isAuth, setIsAuth] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const location = useLocation();
-  const navigate = useNavigate();
+  const { user, item: itemContext } = useContext(Context);
 
   useEffect(() => {
-    if (localStorage.getItem("user-token")?.length) {
-      setIsAuth(true);
-    }
-
     loadItem().then(() => setIsLoading(false));
-    if (location.pathname === "/basket") {
-      setItemInBasket(true);
-    }
   }, []);
 
   const loadItem = async () => {
     try {
-      const { data: itemInfo } = await axios.get(
-        SERVER_URL + `/api/item/itemInfo?itemId=${item.id}`,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("user-token"),
-          },
-        }
-      );
-      setItemInBasket(itemInfo.itemInBasket);
-      setBrand(itemInfo.brand);
-      setType(itemInfo.type);
+      itemContext.basket.find(basketItem => basketItem.id === item.id) && setItemInBasket(true);
     } catch (e) {
       console.log(e);
     }
   };
 
-  const addToCart = async (item) => {
-    await actionCart("add", item)
-      .then((e) => (e ? navigate("/login") : null))
-      .then(() => setItemInBasket(true));
-  };
+  const addToCart = async (item) =>
+    await actionCart("add", item).then(() => setItemInBasket(true));
+
   const removeFromCart = async (item) =>
     await actionCart("remove", item).then(() => setItemInBasket(false));
 
   return (
     <>
-      {isLoading ? (
+      {isLoading || isBasketLoading ? (
         <div key={item.id} className={"loading " + styles.card}>
           <div className="loader"></div>
         </div>
@@ -82,9 +61,12 @@ export const Item = observer(({ item, classN }) => {
 
           <div className={styles.bottom}>
             <p>{item.price}₴</p>
-            {isAuth ? (
+            {user.isAuth ? (
               itemInBasket ? (
-                <button className={styles.inCart} onClick={() => removeFromCart(item)}>
+                <button
+                  className={styles.inCart}
+                  onClick={() => removeFromCart(item)}
+                >
                   <img src={cartImage} alt="cart" />
                 </button>
               ) : (

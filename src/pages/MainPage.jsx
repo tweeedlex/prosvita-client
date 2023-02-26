@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Brands } from "../components/Brands";
 import { Item } from "../components/Item";
 import axios from "axios";
 import { SERVER_URL } from "../config";
 import { Types } from "../components/Types";
-import { countAndSetPages } from "../utils/countAndSetPages";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import styles from "./css/MainPage.module.css";
+import { fetchBrands, fetchItems, fetchTypes } from "../http/itemAPI";
 
-export const MainPage = () => {
-  const [items, setItems] = useState([]);
+import { Context } from "../index";
+import { observer } from "mobx-react-lite";
+import fetchBasket from "../utils/fetchBasket";
 
+export const MainPage = observer(() => {
   const [pages, setPages] = useState([]);
   const [selectedPage, setSelectedPage] = useState(1);
 
@@ -19,32 +21,36 @@ export const MainPage = () => {
   const [selectedType, setSelectedType] = useState(null);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isBasketLoading, setIsBasketLoading] = useState(true);
 
-  const location = useLocation();
+  const { item } = useContext(Context);
 
   useEffect(() => {
-    if (location.search.split("?")[1]) {
-      loadItemsByType();
-    } else {
-      loadItems().then(() => setIsLoading(false));
-    }
+    fetchBasket().then((data) => item.setBasket(data)).then(() => setIsBasketLoading(false));
+    fetchItems(null, null, 1, 24).then((data) => {
+      item.setItems(data.rows);
+      item.setTotalCount(data.count);
+      setIsLoading(false)
+    });
   }, []);
 
-  const loadItems = async () => {
-    const response = await axios.get(SERVER_URL + "/api/item");
-    setItems(response.data.rows);
-    countAndSetPages(response, setPages);
-  };
-
-  const loadItemsByType = async () => {
-    let id = +location.search.split("?")[1];
-    setSelectedType(id);
-    const response = await axios.get(SERVER_URL + `/api/item?typeId=${id}`);
-    setItems(response.data.rows);
-  };
+  useEffect(() => {
+    fetchItems(item.selectedType.id, item.selectedBrand.id, item.page, 24).then(
+      (data) => {
+        item.setItems(data.rows);
+        item.setTotalCount(data.count);
+        setIsLoading(false)
+      }
+    );
+  }, [item.page, item.selectedType, item.selectedBrand]);
 
   const resetFilters = () => {
-    loadItems();
+    fetchItems(item.selectedType.id, item.selectedBrand.id, item.page, 24).then(
+      (data) => {
+        item.setItems(data.rows);
+        item.setTotalCount(data.count);
+      }
+    );
     setSelectedBrand(null);
     setSelectedType(null);
   };
@@ -56,7 +62,7 @@ export const MainPage = () => {
       ${selectedBrand ? `&brandId=${selectedBrand}` : ""}
       ${selectedType ? `&typeId=${selectedType}` : ""}
     `);
-    setItems(response.data.rows);
+    item.setItems(response.data.rows);
     window.scroll(0, 0);
   };
 
@@ -83,7 +89,6 @@ export const MainPage = () => {
             <Types
               setSelectedPage={setSelectedPage}
               setPages={setPages}
-              setItems={setItems}
               selectedType={selectedType}
               selectedBrand={selectedBrand}
               setSelectedType={setSelectedType}
@@ -94,24 +99,30 @@ export const MainPage = () => {
             <Brands
               setSelectedPage={setSelectedPage}
               setPages={setPages}
-              setItems={setItems}
               selectedBrand={selectedBrand}
               selectedType={selectedType}
               setSelectedBrand={setSelectedBrand}
             />
           </div>
-          <button onClick={() => resetFilters()} className={styles.reset}>Скинути</button>
+          <button onClick={() => resetFilters()} className={styles.reset}>
+            Скинути
+          </button>
         </div>
         <div className={styles.items}>
           <div className={styles.cards}>
             {isLoading ? (
-              <div className="loader"></div>
-            ) : items.length ? (
-              items.map((item) => <Item key={item.id} item={item} />)
+              <div className={styles.loading}>
+                Триває завантаження даних...
+                <br />В окремих випадках це може зайняти декілька хвилин.
+                <div className="loading"></div>
+              </div>
+            ) : item.items.length ? (
+              item.items.map((item) => <Item key={item.id} item={item} isBasketLoading={isBasketLoading} />)
             ) : (
               <p>Відстуні товари за Вашими фільтрами</p>
             )}
           </div>
+
           <ul className="pagination">
             {pages.length > 1 &&
               pages.map((page) => (
@@ -127,4 +138,4 @@ export const MainPage = () => {
       </div>
     </div>
   );
-};
+})

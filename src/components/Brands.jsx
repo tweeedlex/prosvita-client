@@ -1,43 +1,50 @@
-import axios from 'axios'
-import React, { useEffect } from 'react'
-import { useState } from 'react'
-import { SERVER_URL } from '../config'
-import { countAndSetPages } from '../utils/countAndSetPages'
+import axios from "axios";
+import React, { useContext, useEffect } from "react";
+import { useState } from "react";
+import { SERVER_URL } from "../config";
+import { fetchBrands, fetchItems, fetchTypes } from "../http/itemAPI";
+import { countAndSetPages } from "../utils/countAndSetPages";
+import { Context } from "../index";
 
-import styles from "./css/Category.module.css"
+import styles from "./css/Category.module.css";
 
-export const Brands = ({setItems, setPages, setSelectedPage, selectedBrand, selectedType, setSelectedBrand}) => {
-  const [brands, setBrands] = useState([])
+export const Brands = ({
+  setPages,
+  setSelectedPage,
+  selectedType,
+  setSelectedBrand,
+  selectedBrand,
+}) => {
+  const { item } = useContext(Context);
 
   useEffect(() => {
-    loadBrands()
+    fetchBrands().then((data) => item.setBrands(data));
   }, []);
 
-  const loadBrands = async () => {
-    await axios.get(SERVER_URL + "/api/brand").then((response) => {
-      setBrands(response.data)
-    })
-  }
-
   const selectBrand = async (id) => {
-    setSelectedBrand(id)
-    const response = await axios.get(SERVER_URL + `/api/item?brandId=${id}${selectedType ? `&typeId=${selectedType}`: ""}`)
-    setItems(response.data.rows)
-    setSelectedPage(1)
-    countAndSetPages(response, setPages)
-  }
+    setSelectedBrand(id);
+    const response = await fetchItems(selectedType, id, 1, 24);
+    item.setItems(response.rows);
+    setSelectedPage(1);
+    countAndSetPages(response.count, setPages);
+  };
 
   return (
     <ul className={styles.items}>
-      {brands.map(brand =>
-        <li key={brand.id}
-          className={`${styles.item} ${brand.id === selectedBrand ? styles.selected : ""}`}
+      {item.brands.map((brand) => (
+        <li
+          key={brand.id}
+          className={`${styles.item} ${
+            brand.id === selectedBrand ? styles.selected : ""
+          }`}
         >
           <button onClick={() => selectBrand(brand.id)}>
-            {brand.name.length < 18 ? brand.name : `${brand.name.substr(0, 18)}..`}
+            {brand.name.length < 20
+              ? brand.name
+              : `${brand.name.substr(0, 20)}..`}
           </button>
         </li>
-      )}
+      ))}
     </ul>
-  )
-}
+  );
+};

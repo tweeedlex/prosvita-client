@@ -1,47 +1,37 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import { SERVER_URL } from "../config";
+import { fetchBrands, fetchItems, fetchTypes } from "../http/itemAPI";
 import { countAndSetPages } from "../utils/countAndSetPages";
+import {Context} from "../index"
 
 import styles from "./css/Category.module.css";
 
 export const Types = ({
-  setItems,
   setPages,
   setSelectedPage,
   selectedType,
   selectedBrand,
   setSelectedType,
 }) => {
-  const [types, setTypes] = useState([]);
+  const { item } = useContext(Context);
 
   useEffect(() => {
-    loadTypes();
+    fetchTypes().then((data) => item.setTypes(data));
   }, []);
-
-  const loadTypes = async () => {
-    await axios.get(SERVER_URL + "/api/type").then((response) => {
-      setTypes(response.data);
-    });
-  };
 
   const selectType = async (id) => {
     setSelectedType(id);
-    const response = await axios.get(
-      SERVER_URL +
-        `/api/item?typeId=${id}${
-          selectedBrand ? `&brandId=${selectedBrand}` : ""
-        }`
-    );
-    setItems(response.data.rows);
+    const response = await fetchItems(id, selectedBrand, 1, 24)
+    item.setItems(response.rows);
     setSelectedPage(1);
-    countAndSetPages(response, setPages);
+    countAndSetPages(response.count, setPages);
   };
 
   return (
     <ul className={styles.items}>
-      {types.map((type) => (
+      {item.types.map((type) => (
         <li
           key={type.id}
           className={`${styles.item} ${

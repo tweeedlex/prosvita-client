@@ -14,15 +14,18 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { check, login } from "./http/userAPI";
 import { Context } from "./index";
+import { fetchBrands, fetchTypes } from "./http/itemAPI";
 
 const App = observer(() => {
-  const { user: userContext } = useContext(Context);
+  const { user: userContext, item } = useContext(Context);
 
   useEffect(() => {
     check().then((data) => {
       userContext.setIsAuth(true);
       userContext.setUser(data);
     });
+    fetchTypes().then((data) => item.setTypes(data));
+    fetchBrands().then((data) => item.setBrands(data));
   }, []);
 
   const location = useLocation();
@@ -49,17 +52,22 @@ const App = observer(() => {
           : ""
       }`}
     >
-      <Header
-        userContext={userContext}
-      />
+      <Header userContext={userContext} />
 
       <div className="main">
         <Routes>
           <Route path="/" element={<TitlePage />} />
           <Route path="/catalog" element={<MainPage />} />
-          <Route path="/item/:id" element={<ItemPage isAdmin={userContext.role === "ADMIN"} />} />
-          {userContext.user.role === "ADMIN" && <Route path="/admin" element={<AdminPage />} />}
-          {userContext.user.role === "MANAGER" && <Route path="/orders" element={<OrdersPage />} />}
+          <Route
+            path="/item/:id"
+            element={<ItemPage isAdmin={userContext.role === "ADMIN"} />}
+          />
+          {userContext.user.role === "ADMIN" && (
+            <Route path="/admin" element={<AdminPage />} />
+          )}
+          {userContext.user.role === "MANAGER" && (
+            <Route path="/orders" element={<OrdersPage />} />
+          )}
         </Routes>
       </div>
 

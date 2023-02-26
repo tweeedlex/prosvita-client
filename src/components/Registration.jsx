@@ -8,22 +8,20 @@ export const Registration = ({ isOpened, setIsOpened }) => {
   const [password, setPassword] = useState("");
   const [repeatedPassword, setRepeatedPassword] = useState("");
 
-
   const registerHandler = async (e) => {
     try {
       if (password !== repeatedPassword) {
         return alert("Паролі не збігаються");
       }
 
-      const response = await register(email, password, repeatedPassword)
-      console.log(response)
+      const response = await register(email, password, repeatedPassword);
 
       if (response.status === 200) {
         alert(`Ви успішно зареєструвались!\nАвторизуйтесь через "Вхід"`);
       }
     } catch (e) {
       if (e.response.data.message) {
-        return alert("Такий користувач вже існує")
+        return alert("Такий користувач вже існує");
       }
 
       let message = "";
@@ -69,7 +67,10 @@ export const Registration = ({ isOpened, setIsOpened }) => {
           type="password"
           className={modalStyles.input}
         />
-        <button className={modalStyles.action} onClick={(e) => registerHandler(e)}>
+        <button
+          className={modalStyles.action}
+          onClick={(e) => registerHandler(e)}
+        >
           Зареєструватися
         </button>
       </div>

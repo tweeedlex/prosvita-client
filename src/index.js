@@ -7,6 +7,7 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import UserStore from "./store/UserStore";
 import ItemStore from "./store/ItemStore";
+import basketStore from "./store/basketStore";
 
 export const Context = createContext(null)
 
@@ -16,7 +17,8 @@ root.render(
     <Context.Provider
       value={{
         user: new UserStore(),
-        device: new ItemStore()
+        item: new ItemStore(),
+        basket: new basketStore()
       }}
     >
       <BrowserRouter>

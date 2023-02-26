@@ -17,10 +17,6 @@ export const Types = ({
 }) => {
   const { item } = useContext(Context);
 
-  useEffect(() => {
-    fetchTypes().then((data) => item.setTypes(data));
-  }, []);
-
   const selectType = async (id) => {
     setSelectedType(id);
     const response = await fetchItems(id, selectedBrand, 1, 24)

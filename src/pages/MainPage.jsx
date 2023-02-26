@@ -25,14 +25,6 @@ export const MainPage = observer(() => {
   const { item } = useContext(Context);
 
   useEffect(() => {
-    fetchItems(null, null, 1, 24).then((data) => {
-      item.setItems(data.rows);
-      item.setTotalCount(data.count);
-      setIsLoading(false)
-    });
-  }, []);
-
-  useEffect(() => {
     fetchItems(item.selectedType.id, item.selectedBrand.id, item.page, 24).then(
       (data) => {
         item.setItems(data.rows);

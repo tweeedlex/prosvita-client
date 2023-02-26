@@ -14,7 +14,7 @@ import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { check, login } from "./http/userAPI";
 import { Context } from "./index";
-import { fetchBrands, fetchTypes } from "./http/itemAPI";
+import { fetchBrands, fetchItems, fetchTypes } from "./http/itemAPI";
 import fetchBasket from "./utils/fetchBasket";
 
 const App = observer(() => {
@@ -28,6 +28,12 @@ const App = observer(() => {
     fetchTypes().then((data) => item.setTypes(data));
     fetchBrands().then((data) => item.setBrands(data));
     fetchBasket().then((data) => item.setBasket(data));
+    
+    fetchItems(null, null, 1, 24).then((data) => {
+      item.setItems(data.rows);
+      item.setTotalCount(data.count);
+      setIsLoading(false);
+    });
   }, []);
 
   const location = useLocation();

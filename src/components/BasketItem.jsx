@@ -15,6 +15,8 @@ export const BasketItem = observer(
     const [type, setType] = useState("");
     const [isAuth, setIsAuth] = useState(false);
     const [itemInBasket, setItemInBasket] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
+    const [amount, setAmount] = useState(1);
 
     const { item: itemContext } = useContext(Context);
 
@@ -27,14 +29,15 @@ export const BasketItem = observer(
     }, []);
 
     const loadItem = () => {
-      setBrand(
-        itemContext.brands.find((brand) => brand.id === item.brandId)?.name
+      setBrand(item.brand.name);
+      setType(item.type.name);
+      setAmount(
+        itemContext.basket?.basketItems?.find(
+          (basketItem) => basketItem.itemId === item.id
+        )?.amount
       );
-      setType(itemContext.types.find((type) => type.id === item.typeId)?.name);
-      setAmount(itemContext.basket.basketItems.find((basketItem) => basketItem.itemId === item.id).amount);
+      setIsLoading(false);
     };
-
-    const [amount, setAmount] = useState(1);
 
     const updateAmount = async (action) => {
       if (action === "+" && amount < 9999) {
@@ -49,8 +52,8 @@ export const BasketItem = observer(
             action === "+" && amount < 9999
               ? amount + 1
               : amount > 1
-              ? amount - 1
-              : amount
+                ? amount - 1
+                : amount
           }`,
         {},
         {
@@ -69,48 +72,68 @@ export const BasketItem = observer(
 
     return (
       <div>
-        <div className={styles.item} key={item.id}>
-          <Link
-            onClick={() => setBasketModalVisible(false)}
-            to={`/item/${item.id}`}
-          >
-            <div
-              className={styles.image}
-              style={{ background: `url(${item.img}) 50% 50%/cover` }}
-            ></div>
-          </Link>
+        {isLoading ? (
+          <div key={item.id} className={"loading " + styles.card}>
+            <div className="loader"></div>
+          </div>
+        ) : (
+          itemInBasket && (
+            <div className={styles.item} key={item.id}>
+              <Link
+                onClick={() => setBasketModalVisible(false)}
+                to={`/item/${item.id}`}
+              >
+                <div
+                  className={styles.image}
+                  style={{ background: `url(${item.img}) 50% 50%/cover` }}
+                ></div>
+              </Link>
 
-          <div className={styles.itemInfo}>
-            <Link
-              onClick={() => setBasketModalVisible(false)}
-              to={`/item/${item.id}`}
-              className={styles.itemName}
-            >
-              {item.name}
-            </Link>
-            <div className={styles.itemActions}>
-              <div className={styles.categories}>
-                <Link onClick={() => setBasketModalVisible(false)}>
-                  {brand}
+              <div className={styles.itemInfo}>
+                <Link
+                  onClick={() => setBasketModalVisible(false)}
+                  to={`/item/${item.id}`}
+                  className={styles.itemName}
+                >
+                  {item.name}
                 </Link>
-                <Link onClick={() => setBasketModalVisible(false)}>{type}</Link>
-              </div>
-              <div className={styles.amount}>
-                <div>
-                  <button onClick={() => updateAmount("+")}>+</button>
-                  <p>{amount}</p>
-                  <button onClick={() => updateAmount("-")}>-</button>
+                <div className={styles.itemActions}>
+                  <div className={styles.categories}>
+                    <Link onClick={() => setBasketModalVisible(false)}>
+                      {brand}
+                    </Link>
+                    <Link onClick={() => setBasketModalVisible(false)}>
+                      {type}
+                    </Link>
+                  </div>
+                  <div className={styles.amount}>
+                    <div>
+                      <button
+                        className={styles.amountChange}
+                        onClick={() => updateAmount("+")}
+                      >
+                        +
+                      </button>
+                      <p>{amount}</p>
+                      <button
+                        className={styles.amountChange}
+                        onClick={() => updateAmount("-")}
+                      >
+                        -
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles.money}>
+                    <button onClick={() => removeFromCart(item)}>
+                      <img src={cartImage} alt="" />
+                    </button>
+                    <p className={styles.price}>{item.price}₴</p>
+                  </div>
                 </div>
               </div>
-              <div className={styles.money}>
-                <button onClick={() => removeFromCart(item)}>
-                  <img src={cartImage} alt="" />
-                </button>
-                <p className={styles.price}>{item.price}₴</p>
-              </div>
             </div>
-          </div>
-        </div>
+          )
+        )}
       </div>
     );
   }

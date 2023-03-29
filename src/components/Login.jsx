@@ -4,23 +4,25 @@ import { Modal } from "./Modal";
 import modalStyles from "./css/Modal.module.css";
 import { Context } from "../index";
 import { login } from "../http/userAPI";
+import fetchBasket from "../utils/fetchBasket";
 
 export const Login = observer(
-  ({ isOpened, setIsOpened, getEmail, getRole }) => {
+  ({ isOpened, setIsOpened }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const {user} = useContext(Context);
-
+    const {user, item} = useContext(Context);
+  
     const loginHandler = async (e) => {
       try {
         e.preventDefault();
         const data = await login(email, password);
         user.setUser(data);
         user.setIsAuth(true);
+        fetchBasket().then((data) => item.setBasket(data));
 
         setIsOpened(false)
       } catch (e) {
-        alert(e.reponse.data.message);
+        alert(e.response.data.message);
       }
     };
 

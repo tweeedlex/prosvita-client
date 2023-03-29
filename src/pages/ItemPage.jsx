@@ -7,8 +7,6 @@ import { SERVER_URL } from "../config";
 import actionCart from "../utils/actionCart";
 
 import styles from "./css/ItemPage.module.css";
-import starOrange from "../images/item/star-orange.png";
-import starImage from "../images/item/star.png";
 import cartImage from "../images/catalog/cart.png";
 
 export const ItemPage = ({ isAdmin }) => {
@@ -18,6 +16,9 @@ export const ItemPage = ({ isAdmin }) => {
   const [item, setItem] = useState({});
   const [brand, setBrand] = useState("");
   const [type, setType] = useState("");
+  const [rating, setRating] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+  const [ratingsCount, setRatingsCount] = useState(0);
 
   const [isAuth, setIsAuth] = useState(false);
   const [itemInBasket, setItemInBasket] = useState(false);
@@ -35,6 +36,36 @@ export const ItemPage = ({ isAdmin }) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (rating) {
+      rateItem();
+    }
+  }, [rating]);
+
+  const rateItem = async () => {
+    if (!isAuth) {
+      return alert("Авторизуйтесь для оцінки товару");
+    }
+    try {
+      await axios.post(
+        SERVER_URL + "/api/item/rate",
+
+        {
+          itemId: item.id,
+          rating: +rating,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("user-token"),
+          },
+        }
+      );
+      loadItem();
+    } catch (e) {
+      console.log(e.response.data);
+    }
+  };
+
   const loadItem = async () => {
     const response = await axios.get(SERVER_URL + "/api/item/" + id);
     setItem(response.data);
@@ -48,6 +79,8 @@ export const ItemPage = ({ isAdmin }) => {
           },
         }
       );
+      setAverageRating(Math.round(itemInfo.rating * 10) / 10);
+      setRatingsCount(itemInfo.ratingsCount);
       setItemInBasket(itemInfo.itemInBasket);
       setBrand(itemInfo.brand);
       setType(itemInfo.type);
@@ -89,22 +122,57 @@ export const ItemPage = ({ isAdmin }) => {
               <Link>
                 {brand.length < 18 ? brand : `${brand.substr(0, 18)}..`}
               </Link>
-              <Link>
-                {type.length < 18 ? type : `${type.substr(0, 18)}..`}
-              </Link>
+              <Link>{type.length < 18 ? type : `${type.substr(0, 18)}..`}</Link>
               <p className={styles.id}>Ідентифікатор: {item.id}</p>
             </div>
             <div className={styles.centralColumn}>
               <div className={styles.stars}>
-                <img src={starOrange} className={styles.star} />
-                <img src={starOrange} className={styles.star} />
-                <img src={starOrange} className={styles.star} />
-                <img src={starOrange} className={styles.star} />
-                <img src={starImage} className={styles.star} />
+                <div className={styles.rating}>
+                  <input
+                    type="radio"
+                    name="rating"
+                    value="5"
+                    id="5"
+                    onChange={(e) => setRating(e.target.value)}
+                  />
+                  <label for="5">☆</label>
+                  <input
+                    type="radio"
+                    name="rating"
+                    value="4"
+                    id="4"
+                    onChange={(e) => setRating(e.target.value)}
+                  />
+                  <label for="4">☆</label>
+                  <input
+                    type="radio"
+                    name="rating"
+                    value="3"
+                    id="3"
+                    onChange={(e) => setRating(e.target.value)}
+                  />
+                  <label for="3">☆</label>
+                  <input
+                    type="radio"
+                    name="rating"
+                    value="2"
+                    id="2"
+                    onChange={(e) => setRating(e.target.value)}
+                  />
+                  <label for="2">☆</label>
+                  <input
+                    type="radio"
+                    name="rating"
+                    value="1"
+                    id="1"
+                    onChange={(e) => setRating(e.target.value)}
+                  />
+                  <label for="1">☆</label>
+                </div>
               </div>
               <div className={styles.marks}>
-                <p>3.7/5</p>
-                <p>132 оцінок</p>
+                <p>{averageRating ? `${averageRating} / 5` : ""}</p>
+                <p>{ratingsCount} оцінок</p>
               </div>
             </div>
             <div className={styles.buy}>

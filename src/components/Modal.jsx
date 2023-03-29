@@ -2,14 +2,14 @@ import React, { useEffect } from "react";
 import styles from "./css/Modal.module.css";
 
 export const Modal = ({ children, visible, setVisible, isBasket, zIndex, isOrder }) => {
-  let body = document.querySelector("body");
+  let html = document.querySelector("html");
 
   useEffect(() => {
     if (!isOrder) {
       if (visible) {
-        body.classList = "lock";
+        html.classList = "locked";
       } else {
-        body.classList = "";
+        html.classList = "";
       }
     }
   }, [visible]);

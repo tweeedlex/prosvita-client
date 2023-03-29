@@ -12,6 +12,38 @@
   gap: 20px;
 }
 
+
+.search {
+  max-width: 400px;
+  width: 100%;
+  height: 40px;
+  border: 1px solid #ffffff;
+  border-radius: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 7;
+}
+
+.search input {
+  font-size: 18px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.search input::placeholder {
+  font-size: 18px;
+  color: #ffffff;
+  margin: 0 10px 0 0;
+}
+
+.search img {
+  width: 20px;
+  height: 20px;
+}
+
 .filters {
   max-width: 260px;
   display: flex;

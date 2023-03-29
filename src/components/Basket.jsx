@@ -6,26 +6,26 @@ import styles from "./css/Basket.module.css";
 import { BasketItem } from "./BasketItem";
 import { Modal } from "./Modal";
 import { OrderForm } from "./OrderForm";
+import { Context } from "../index";
+import { useContext } from "react";
+import { observer } from "mobx-react-lite";
 
-export const Basket = ({ isOpened, setIsOpened }) => {
+export const Basket = observer(({ isOpened, setIsOpened }) => {
   const [isAuth, setIsAuth] = useState(false);
   const [basket, setBasket] = useState([]);
   const [buyModalVisible, setBuyModalVisible] = useState(false);
 
+  const {item} = useContext(Context);
   useEffect(() => {
     if (localStorage.getItem("user-token")) {
       setIsAuth(true);
     }
 
-    fetchBasket(setIsAuth).then((basket) => setBasket(basket));
+    fetchBasket(setIsAuth).then((basket) => {
+      setBasket(basket);
+      item.setBasket(basket);
+    });
   }, [isOpened]);
-
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [fathersName, setFathersName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [deliveryMethod, setDeliveryMethod] = useState("Кур'єр");
-  const [deliveryAddress, setDeliveryAddress] = useState("");
 
   const [orderPrice, setOrderPrice] = useState(0);
 
@@ -109,4 +109,4 @@ export const Basket = ({ isOpened, setIsOpened }) => {
       </div>
     </Modal>
   );
-};
+});

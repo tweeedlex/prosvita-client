@@ -1,28 +1,19 @@
-import axios from "axios";
-import React, { useContext, useEffect } from "react";
-import { useState } from "react";
-import { SERVER_URL } from "../config";
-import { fetchBrands, fetchItems, fetchTypes } from "../http/itemAPI";
-import { countAndSetPages } from "../utils/countAndSetPages";
+import React, { useContext } from "react";
 import {Context} from "../index"
 
 import styles from "./css/Category.module.css";
+import { observer } from "mobx-react-lite";
 
-export const Types = ({
-  setPages,
+export const Types = observer(({
   setSelectedPage,
-  selectedType,
-  selectedBrand,
-  setSelectedType,
+  setSearchValue
 }) => {
   const { item } = useContext(Context);
 
   const selectType = async (id) => {
-    setSelectedType(id);
-    const response = await fetchItems(id, selectedBrand, 1, 24)
-    item.setItems(response.rows);
+    item.setSelectedType({id});
     setSelectedPage(1);
-    countAndSetPages(response.count, setPages);
+    setSearchValue("");
   };
 
   return (
@@ -31,7 +22,7 @@ export const Types = ({
         <li
           key={type.id}
           className={`${styles.item} ${
-            type.id === selectedType ? styles.selected : ""
+            type.id === item.selectedType?.id ? styles.selected : ""
           }`}
         >
           <button
@@ -43,4 +34,4 @@ export const Types = ({
       ))}
     </ul>
   );
-};
+});

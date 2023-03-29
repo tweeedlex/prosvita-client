@@ -1,13 +1,10 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import actionCart from "../utils/actionCart";
-import axios from "axios";
-import { SERVER_URL } from "../config";
 
 import styles from "./css/Item.module.css";
 import cartImage from "../images/catalog/cart.png";
-import checkImage from "../images/catalog/check.png";
 
 import { Context } from "../index";
 
@@ -18,15 +15,18 @@ export const Item = observer(({ item }) => {
   const { user, item: itemContext } = useContext(Context);
 
   useEffect(() => {
-    loadItem().then(() => setIsLoading(false));
-  }, []);
+    setIsLoading(false)
+    loadItem()
+  }, [user.user, itemContext.basket]);
 
   const loadItem = async () => {
-    try {
-      itemContext.basket.data.find(basketItem => basketItem.id === item.id) && setItemInBasket(true);
-    } catch (e) {
-      console.log(e);
+    setItemInBasket(false);
+    if (itemContext.basket) {
+      itemContext.basket?.data?.find(
+        (basketItem) => basketItem.id === item.id
+      ) && setItemInBasket(true);
     }
+    setIsLoading(false);
   };
 
   const addToCart = async (item) =>
@@ -37,7 +37,7 @@ export const Item = observer(({ item }) => {
 
   return (
     <>
-      {isLoading || !itemContext.basket ? (
+      {isLoading ? (
         <div key={item.id} className={"loading " + styles.card}>
           <div className="loader"></div>
         </div>

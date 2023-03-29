@@ -5,52 +5,65 @@ import axios from "axios";
 import { SERVER_URL } from "../config";
 import { Types } from "../components/Types";
 import { useLocation } from "react-router-dom";
+import searchIcon from "../images/header/search.png";
 
 import styles from "./css/MainPage.module.css";
-import { fetchBrands, fetchItems, fetchTypes } from "../http/itemAPI";
+import { fetchItems } from "../http/itemAPI";
 
 import { Context } from "../index";
 import { observer } from "mobx-react-lite";
-import fetchBasket from "../utils/fetchBasket";
 
 export const MainPage = observer(() => {
   const [pages, setPages] = useState([]);
   const [selectedPage, setSelectedPage] = useState(1);
-
-  const [selectedBrand, setSelectedBrand] = useState(null);
-  const [selectedType, setSelectedType] = useState(null);
-
   const [isLoading, setIsLoading] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
 
   const { item } = useContext(Context);
 
+  const location = useLocation();
+  const hash = location.hash.substring(1);
+
   useEffect(() => {
-    fetchItems(item.selectedType.id, item.selectedBrand.id, item.page, 24).then(
-      (data) => {
-        item.setItems(data.rows);
-        item.setTotalCount(data.count);
-        setIsLoading(false)
-      }
-    );
+    if (hash) {
+      item.setSelectedType({ id: +hash });
+    }
+  }, [hash, item]);
+
+  useEffect(() => {
+    fetchItems(
+      item.selectedType?.id,
+      item.selectedBrand?.id,
+      item.page,
+      24
+    ).then((data) => {
+      item.setItems(data.rows);
+      item.setTotalCount(data.count);
+      setIsLoading(false);
+    });
   }, [item.page, item.selectedType, item.selectedBrand]);
 
   const resetFilters = () => {
-    fetchItems(item.selectedType.id, item.selectedBrand.id, item.page, 24).then(
-      (data) => {
-        item.setItems(data.rows);
-        item.setTotalCount(data.count);
-      }
-    );
-    setSelectedBrand(null);
-    setSelectedType(null);
+    fetchItems(
+      item.selectedType?.id,
+      item.selectedBrand?.id,
+      item.page,
+      24
+    ).then((data) => {
+      item.setItems(data.rows);
+      item.setTotalCount(data.count);
+    });
+    item.setSelectedBrand(null);
+    item.setSelectedType(null);
+    setSearchValue("");
   };
 
   const changePage = async (page) => {
     setSelectedPage(page);
     const response = await axios.get(`
       ${SERVER_URL}/api/item?page=${page}
-      ${selectedBrand ? `&brandId=${selectedBrand}` : ""}
-      ${selectedType ? `&typeId=${selectedType}` : ""}
+      ${item.selectedBrand ? `&brandId=${item.selectedBrand.id}` : ""}
+      ${item.selectedType ? `&typeId=${item.selectedType.id}` : ""}
     `);
     item.setItems(response.data.rows);
     window.scroll(0, 0);
@@ -70,29 +83,36 @@ export const MainPage = observer(() => {
     body.classList = "lock";
   };
 
+  const search = async () => {
+    const response = await axios.get(`
+        ${SERVER_URL}/api/item/search?item=${searchValue}
+      `);
+    item.setItems(response.data?.rows);
+    item.setTotalCount(response.data?.count);
+  };
+
   return (
     <div className={styles.catalog}>
       <div className={"catalog__container " + styles.container}>
         <div className={styles.filters}>
+          <div className={styles.search}>
+            <input
+              placeholder="Пошук товарів..."
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+            <button>
+              <img src={searchIcon} alt="Search" onClick={() => search()} />
+            </button>
+          </div>
           <div className={styles.category}>
             <h3>Типи</h3>
-            <Types
-              setSelectedPage={setSelectedPage}
-              setPages={setPages}
-              selectedType={selectedType}
-              selectedBrand={selectedBrand}
-              setSelectedType={setSelectedType}
-            />
+            <Types setSearchValue={setSearchValue} setSelectedPage={setSelectedPage} setPages={setPages} />
           </div>
           <div className={styles.category}>
             <h3>Викладачі</h3>
-            <Brands
-              setSelectedPage={setSelectedPage}
-              setPages={setPages}
-              selectedBrand={selectedBrand}
-              selectedType={selectedType}
-              setSelectedBrand={setSelectedBrand}
-            />
+            <Brands setSearchValue={setSearchValue} setSelectedPage={setSelectedPage} setPages={setPages} />
           </div>
           <button onClick={() => resetFilters()} className={styles.reset}>
             Скинути
@@ -106,7 +126,7 @@ export const MainPage = observer(() => {
                 <br />В окремих випадках це може зайняти декілька хвилин.
                 <div className="loading"></div>
               </div>
-            ) : item.items.length ? (
+            ) : item.items?.length ? (
               item.items.map((item) => <Item key={item.id} item={item} />)
             ) : (
               <p>Відстуні товари за Вашими фільтрами</p>
@@ -128,4 +148,4 @@ export const MainPage = observer(() => {
       </div>
     </div>
   );
-})
+});

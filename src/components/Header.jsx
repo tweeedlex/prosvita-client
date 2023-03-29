@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import styles from "./css/Header.module.css";
 import logoLetter from "../images/header/logo P.png";
-import searchIcon from "../images/header/search.png";
 import cartIcon from "../images/header/cart.png";
 import profileIcon from "../images/header/profile.png";
 import { Link, useLocation } from "react-router-dom";
 import { Login } from "./Login";
 import { Registration } from "./Registration";
 import { Basket } from "./Basket";
+import axios from "axios";
+import {v4 as uuid} from "uuid"
+import { googleAuthProvider } from "../firebase";
+import { signInWithPopup, signOut } from "firebase/auth";
+import { SERVER_URL } from "../config";
+import jwt_decode from "jwt-decode";
+import fetchBasket from "../utils/fetchBasket";
+import { observer } from "mobx-react-lite";
 
-export const Header = (props) => {
+export const Header = observer(({userContext, itemContext}) => {
   const location = useLocation();
 
   const [isBasketOpened, setIsBasketOpened] = useState(false);
@@ -18,26 +25,56 @@ export const Header = (props) => {
   const [isLoginOpened, setIsLoginOpened] = useState(false);
   const [isRegistrationOpened, setIsRegistrationOpened] = useState(false);
 
-  let body = document.querySelector("body");
+  let html = document.querySelector("html");
+
+  const openBasket = () => {
+    setIsBasketOpened(!isPopUpOpened);
+    isBasketOpened
+      ? html.classList.remove("locked")
+      : html.classList.add("locked");
+  };
 
   const togglePopup = () => {
     setIsPopUpOpened(!isPopUpOpened);
-    const body = document.querySelector("body");
     isPopUpOpened
-      ? body.classList.remove("locked")
-      : body.classList.add("locked");
+      ? html.classList.remove("locked")
+      : html.classList.add("locked");
+  };
+
+  const loginWithGoogle = async () => {
+    signInWithPopup(userContext.auth, googleAuthProvider)
+      .then((credentials) => {
+        const user = credentials.user;
+        user.role = "USER";
+        userContext.setUser(user)
+      })
+      .then(async () => {
+        const response = await axios.post(SERVER_URL + "/api/user/google", {
+          email: userContext.user?.email,
+          password: uuid()
+        });
+        localStorage.setItem("user-token", response.data);
+        userContext.setUser(jwt_decode(response.data));
+        fetchBasket().then((data) => {
+          itemContext.setBasket(data);
+        });
+      })
+      .catch((error) => console.log(error));
   };
 
   const logOut = () => {
-    localStorage.setItem("user-token", "")
-    console.log(localStorage.getItem("user-token"))
-    props.userContext.setUser({})
+    localStorage.setItem("user-token", "");
+    userContext.setUser({})
+    itemContext.setBasket({});
+    if (userContext.auth) {
+      signOut(userContext.auth).then(() => userContext.setUser(null));
+    }
   };
 
   const toggleMenu = () => {
     isMenuActive
-      ? body.classList.remove("locked")
-      : body.classList.add("locked");
+      ? html.classList.remove("locked")
+      : html.classList.add("locked");
     if (isMenuActive) {
       return setIsMenuActive(false);
     }
@@ -57,13 +94,6 @@ export const Header = (props) => {
             styles.inMobileMenu + " " + (isMenuActive ? styles.active : "")
           }
         >
-          <div className={styles.search}>
-            <input placeholder="Пошук товарів..." type="text" />
-            <button>
-              <img src={searchIcon} alt="Search" />
-            </button>
-          </div>
-
           <nav className={styles.navigation}>
             <ul>
               <li className={location.pathname === "/" ? styles.active : ""}>
@@ -102,7 +132,7 @@ export const Header = (props) => {
         </div>
 
         <div className={styles.actions}>
-          <button onClick={() => setIsBasketOpened(true)}>
+          <button onClick={() => openBasket()}>
             <img src={cartIcon} alt="basket" />
           </button>
           <button onClick={togglePopup}>
@@ -118,12 +148,16 @@ export const Header = (props) => {
           </button>
           {isPopUpOpened && (
             <div className={styles.popUp} onClick={togglePopup}>
-              {props.userContext.user.email ? (
+              {userContext.user?.email ? (
                 <div className={styles.popUpContent}>
-                  <p>{props.userContext.user.email}</p>
+                  <p>{userContext.user.email}</p>
                   <Link to="/">Мої замовлення</Link>
-                  {props.userContext.user.role === "ADMIN" && <Link to="/admin">Адмін-панель</Link>}
-                  {props.userContext.user.role === "MANAGER" && <Link to="/orders">Замовлення</Link>}
+                  {userContext.user.role === "ADMIN" && (
+                    <Link to="/admin">Адмін-панель</Link>
+                  )}
+                  {userContext.user.role === "MANAGER" && (
+                    <Link to="/orders">Замовлення</Link>
+                  )}
                   <a onClick={() => logOut()}>Вийти</a>
                 </div>
               ) : (
@@ -131,7 +165,8 @@ export const Header = (props) => {
                   <a onClick={() => setIsRegistrationOpened(true)}>
                     Реєстрація
                   </a>
-                  <a onClick={() => setIsLoginOpened(true)}>Вхід</a>
+                  <a onClick={() => setIsLoginOpened(true)}>Увійти з поштою</a>
+                  <a onClick={() => loginWithGoogle()}>Увійти з Google</a>
                 </div>
               )}
             </div>
@@ -141,8 +176,6 @@ export const Header = (props) => {
         <Login
           isOpened={isLoginOpened}
           setIsOpened={setIsLoginOpened}
-          getEmail={props.getEmail}
-          getRole={props.getRole}
         />
         <Registration
           isOpened={isRegistrationOpened}
@@ -151,4 +184,4 @@ export const Header = (props) => {
       </div>
     </header>
   );
-};
+});

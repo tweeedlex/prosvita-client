@@ -1,12 +1,18 @@
-import React, { useState } from "react";
-import { register } from "../http/userAPI";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
+import React, { useState, useContext } from "react";
 import modalStyles from "./css/Modal.module.css";
 import { Modal } from "./Modal";
+import { Context } from "../index";
+import { register } from "../http/userAPI";
 
 export const Registration = ({ isOpened, setIsOpened }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatedPassword, setRepeatedPassword] = useState("");
+  const { user } = useContext(Context);
 
   const registerHandler = async (e) => {
     try {
@@ -14,26 +20,23 @@ export const Registration = ({ isOpened, setIsOpened }) => {
         return alert("Паролі не збігаються");
       }
 
-      const response = await register(email, password, repeatedPassword);
+      e.preventDefault();
 
-      if (response.status === 200) {
-        alert(`Ви успішно зареєструвались!\nАвторизуйтесь через "Вхід"`);
-      }
+      const credentials = await createUserWithEmailAndPassword(user.auth, email, password);
+      await register(credentials.user.uid, email);
+      sendEmailVerification(user.auth.currentUser)
+        .then(() => {
+          alert(
+            "На вашу електронну пошту надіслано листа з підтвердженням. Для оформлення замовлення необхідно підтвердити свою електронну пошту."
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          alert(error);
+        });
+      setIsOpened(false);
     } catch (e) {
-      if (e.response.data.message) {
-        return alert("Такий користувач вже існує");
-      }
-
-      let message = "";
-      for (let error of e.response.data.errors) {
-        message += `${
-          error.param.charAt(0).toUpperCase() + error.param.slice(1)
-        } is invalid\n`;
-      }
-      alert(
-        "Електронна пошта має бути корректною\nПароль має бути від 8 до 16 символів\n\n" +
-          message
-      );
+      console.log(e);
     }
   };
 

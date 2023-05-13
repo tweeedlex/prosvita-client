@@ -2,21 +2,21 @@ import React, { useState } from "react";
 import styles from "./css/Header.module.css";
 import logoLetter from "../images/header/logo P.png";
 import cartIcon from "../images/header/cart.png";
+import checkIcon from "../images/catalog/check.png";
 import profileIcon from "../images/header/profile.png";
 import { Link, useLocation } from "react-router-dom";
 import { Login } from "./Login";
 import { Registration } from "./Registration";
 import { Basket } from "./Basket";
 import axios from "axios";
-import {v4 as uuid} from "uuid"
+import { v4 as uuid } from "uuid";
 import { googleAuthProvider } from "../firebase";
-import { signInWithPopup, signOut } from "firebase/auth";
+import { sendEmailVerification, signInWithPopup, signOut } from "firebase/auth";
 import { SERVER_URL } from "../config";
 import jwt_decode from "jwt-decode";
-import fetchBasket from "../utils/fetchBasket";
 import { observer } from "mobx-react-lite";
 
-export const Header = observer(({userContext, itemContext}) => {
+export const Header = observer(({ userContext }) => {
   const location = useLocation();
 
   const [isBasketOpened, setIsBasketOpened] = useState(false);
@@ -46,26 +46,22 @@ export const Header = observer(({userContext, itemContext}) => {
       .then((credentials) => {
         const user = credentials.user;
         user.role = "USER";
-        userContext.setUser(user)
+        userContext.setUser(user);
       })
       .then(async () => {
         const response = await axios.post(SERVER_URL + "/api/user/google", {
           email: userContext.user?.email,
-          password: uuid()
+          password: uuid(),
         });
         localStorage.setItem("user-token", response.data);
         userContext.setUser(jwt_decode(response.data));
-        fetchBasket().then((data) => {
-          itemContext.setBasket(data);
-        });
       })
       .catch((error) => console.log(error));
   };
 
   const logOut = () => {
     localStorage.setItem("user-token", "");
-    userContext.setUser({})
-    itemContext.setBasket({});
+    userContext.setUser({});
     if (userContext.auth) {
       signOut(userContext.auth).then(() => userContext.setUser(null));
     }
@@ -79,6 +75,22 @@ export const Header = observer(({userContext, itemContext}) => {
       return setIsMenuActive(false);
     }
     setIsMenuActive(true);
+  };
+
+  const resendVerification = async () => {
+    sendEmailVerification(userContext.auth.currentUser)
+      .then(() => {
+        alert(
+          "На вашу електронну пошту надіслано листа з підтвердженням. Для оформлення замовлення необхідно підтвердити свою електронну пошту."
+        );
+      })
+      .catch((error) => {
+        if (error.code === "auth/too-many-requests") {
+          alert(
+            "Забагато спроб підтвердити свою електронну пошту. Спробуйте пізніше."
+          );
+        }
+      });
   };
 
   return (
@@ -151,6 +163,16 @@ export const Header = observer(({userContext, itemContext}) => {
               {userContext.user?.email ? (
                 <div className={styles.popUpContent}>
                   <p>{userContext.user.email}</p>
+                  {userContext.user.emailVerified ? (
+                    <p className={styles.verified}>
+                      <img width={14} height={14} src={checkIcon} />
+                      Пошта підтверджена
+                    </p>
+                  ) : (
+                    <a onClick={() => resendVerification()}>
+                      Надіслати лист з підтвердженням
+                    </a>
+                  )}
                   <Link to="/">Мої замовлення</Link>
                   {userContext.user.role === "ADMIN" && (
                     <Link to="/admin">Адмін-панель</Link>
@@ -173,10 +195,7 @@ export const Header = observer(({userContext, itemContext}) => {
           )}
         </div>
         <Basket isOpened={isBasketOpened} setIsOpened={setIsBasketOpened} />
-        <Login
-          isOpened={isLoginOpened}
-          setIsOpened={setIsLoginOpened}
-        />
+        <Login isOpened={isLoginOpened} setIsOpened={setIsLoginOpened} />
         <Registration
           isOpened={isRegistrationOpened}
           setIsOpened={setIsRegistrationOpened}

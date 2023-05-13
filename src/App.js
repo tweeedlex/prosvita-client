@@ -12,7 +12,6 @@ import { Footer } from "./components/Footer";
 import { check } from "./http/userAPI";
 import { Context } from "./index";
 import { fetchBrands, fetchTypes } from "./http/itemAPI";
-import fetchBasket from "./utils/fetchBasket";
 import { AuthProvider } from "./components/AuthProvider";
 
 const App = observer(() => {
@@ -25,7 +24,8 @@ const App = observer(() => {
     });
     fetchTypes().then((data) => item.setTypes(data));
     fetchBrands().then((data) => item.setBrands(data));
-    fetchBasket().then((data) => item.setBasket(data));
+    localStorage.getItem("basket") == null &&
+      localStorage.setItem("basket", "[]");
   }, []);
 
   const location = useLocation();
@@ -44,7 +44,7 @@ const App = observer(() => {
       <Header userContext={userContext} itemContext={item} />
 
       <div className="main">
-        <AuthProvider userContext={userContext}/>
+        <AuthProvider userContext={userContext} />
         <Routes>
           <Route path="/" element={<TitlePage />} />
           <Route path="/catalog" element={<MainPage />} />

@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { SERVER_URL } from "../config";
-import actionCart from "../utils/actionCart";
 
 import styles from "./css/ItemPage.module.css";
 import cartImage from "../images/catalog/cart.png";
@@ -89,10 +88,28 @@ export const ItemPage = ({ isAdmin }) => {
     }
   };
 
-  const addToCart = async (item) =>
-    await actionCart("add", item).then(() => setItemInBasket(true));
-  const removeFromCart = async (item) =>
-    await actionCart("remove", item).then(() => setItemInBasket(false));
+  const toggleInCart = () => {
+    if (itemInBasket) {
+      localStorage.setItem(
+        "basket",
+        JSON.stringify(
+          JSON.parse(localStorage.getItem("basket")).filter(
+            (basketItem) => basketItem.id !== item.id
+          )
+        )
+      );
+      setItemInBasket(false);
+    } else {
+      localStorage.setItem(
+        "basket",
+        JSON.stringify([
+          ...JSON.parse(localStorage.getItem("basket")),
+          { id: item.id, amount: 1 },
+        ])
+      );
+      setItemInBasket(true);
+    }
+  };
 
   const deleteItem = async () => {
     try {
@@ -179,20 +196,12 @@ export const ItemPage = ({ isAdmin }) => {
               <p className={styles.price}>{item.price}₴</p>
 
               {isAuth ? (
-                itemInBasket ? (
-                  <button
-                    className={styles.inCart}
-                    onClick={() => removeFromCart(item)}
-                  >
-                    <p>Вилучити</p>
-                    <img src={cartImage} alt="cart" />
-                  </button>
-                ) : (
-                  <button onClick={() => addToCart(item)}>
-                    <p>В кошик</p>
-                    <img src={cartImage} alt="cart" />
-                  </button>
-                )
+                <button
+                  className={itemInBasket ? styles.inCart : ""}
+                  onClick={() => toggleInCart()}
+                >
+                  <img src={cartImage} alt="cart" />
+                </button>
               ) : (
                 <button onClick={() => alert("Авторизуйтесь")}>
                   <p>В кошик</p>

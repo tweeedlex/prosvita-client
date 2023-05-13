@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        color: #fff;
+        text-decoration: none;
+      }
+      body {
+        font-family: "Montserrat", sans-serif;
+        font-size: 20px;
+        line-height: 1.5;
+        color: #fff;
+        background: linear-gradient(231.77deg, #1e5c2c 39.01%, #12451e 97.94%);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+      }
+      .main__container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .logo {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+      }
+      .logo span {
+        margin-left: -20px;
+      }
+      .p {
+        text-align: center;
+      }
+      hr {
+        width: 100%;
+        height: 1px;
+        background: #fff;
+        border: none;
+      }
+      .items {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        position: relative;
+      }
+      .image {
+        min-width: 115px;
+        min-height: 150px;
+        background: url("https://courses.prometheus.org.ua/asset-v1:Prometheus+ENG_A2+2020_T2+type@asset+block@358.jpg")
+          100% 0px / contain no-repeat;
+      }
+      .description {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .item__footer {
+        display: flex;
+        align-items: flex-end;
+        gap: 40px;
+      }
+      .item::after {
+        content: "";
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 1px;
+        background: #fff;
+        bottom: -20px;
+      }
+      footer {
+        margin: 20px 0 0 0;
+      }
+    </style>
+    <header>
+      <div class="header__container">
+        <a href="https://prosvita.netlify.app" class="logo">
+          <img src="./images/header/logo P.png" />
+          <span>росвіта</span>
+        </a>
+      </div>
+    </header>
+    <div class="main">
+      <div class="main__container">
+        <p class="p">Добрий день, шановний Антонюк Володимир Святославович.</p>
+        <p class="p">
+          Ваше замовлення №4 прийняте і буде відправлене на відділення пошти за
+          адресою: м. Житомир вул. Клосовського, буд. 49. Дякуємо за покупку!
+        </p>
+        <p>Замовлені товари:</p>
+        <hr />
+        <div class="items">
+          <div class="item">
+            <div class="image"></div>
+            <div class="description">
+              <p>Курс "Англійська мова для дорослих"</p>
+              <a
+                >Ваше унікальне посилання для доступу:
+                https://prosvita.netlify.app/item/16</a
+              >
+              <div class="item__footer">
+                <div class="categories">
+                  <p>ЗНО</p>
+                  <p>Заболотний О.</p>
+                </div>
+                <p class="amount">5 шт.</p>
+                <p class="price">350 грн.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer>До сплати: 720₴</footer>
+      </div>
+    </div>
+  </body>
+</html>

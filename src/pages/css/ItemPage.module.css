@@ -129,7 +129,7 @@
 .inCart::after {
   content: url("../../images/catalog/check.png");
   position: absolute;
-  left: 120px;
+  left: 8px;
   top: 2px;
 }
 

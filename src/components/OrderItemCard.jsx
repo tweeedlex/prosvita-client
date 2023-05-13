@@ -1,7 +1,5 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { SERVER_URL } from "../config";
 import styles from "../pages/css/OrdersPage.module.css";
 
 export const OrderItemCard = ({ item, amounts }) => {

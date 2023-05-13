@@ -1,7 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import actionCart from "../utils/actionCart";
 
 import styles from "./css/Item.module.css";
 import cartImage from "../images/catalog/cart.png";
@@ -15,25 +14,43 @@ export const Item = observer(({ item }) => {
   const { user, item: itemContext } = useContext(Context);
 
   useEffect(() => {
-    setIsLoading(false)
-    loadItem()
+    setIsLoading(false);
+    loadItem();
   }, [user.user, itemContext.basket]);
 
   const loadItem = async () => {
     setItemInBasket(false);
-    if (itemContext.basket) {
-      itemContext.basket?.data?.find(
-        (basketItem) => basketItem.id === item.id
-      ) && setItemInBasket(true);
+    const basket = JSON.parse(localStorage.getItem("basket"));
+    if (basket) {
+      basket.find((basketItem) => basketItem.id === item.id) &&
+        setItemInBasket(true);
     }
     setIsLoading(false);
   };
 
-  const addToCart = async (item) =>
-    await actionCart("add", item).then(() => setItemInBasket(true));
-
-  const removeFromCart = async (item) =>
-    await actionCart("remove", item).then(() => setItemInBasket(false));
+  const toggleInCart = () => {
+    if (itemInBasket) {
+      localStorage.setItem(
+        "basket",
+        JSON.stringify(
+          JSON.parse(localStorage.getItem("basket")).filter(
+            (basketItem) => basketItem.id !== item.id
+          )
+        )
+      );
+      setItemInBasket(false);
+    } else {
+      item.amount = 1;
+      localStorage.setItem(
+        "basket",
+        JSON.stringify([
+          ...JSON.parse(localStorage.getItem("basket")),
+          item,
+        ])
+      );
+      setItemInBasket(true);
+    }
+  };
 
   return (
     <>
@@ -61,24 +78,12 @@ export const Item = observer(({ item }) => {
 
           <div className={styles.bottom}>
             <p>{item.price}₴</p>
-            {user.isAuth ? (
-              itemInBasket ? (
-                <button
-                  className={styles.inCart}
-                  onClick={() => removeFromCart(item)}
-                >
-                  <img src={cartImage} alt="cart" />
-                </button>
-              ) : (
-                <button onClick={() => addToCart(item)}>
-                  <img src={cartImage} alt="cart" />
-                </button>
-              )
-            ) : (
-              <button onClick={() => alert("Авторизуйтесь")}>
-                <img src={cartImage} alt="cart" />
-              </button>
-            )}
+            <button
+              className={itemInBasket ? styles.inCart : ""}
+              onClick={() => toggleInCart()}
+            >
+              <img src={cartImage} alt="cart" />
+            </button>
           </div>
         </div>
       )}

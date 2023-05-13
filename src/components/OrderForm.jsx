@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Modal } from "./Modal";
 import modalStyles from "./css/Modal.module.css";
 import axios from "axios";
 import { SERVER_URL } from "../config";
+import { Context } from "../index";
 
-export const OrderForm = ({ buyModalVisible, setBuyModalVisible, orderPrice, clearBasket }) => {
+export const OrderForm = ({
+  buyModalVisible,
+  setBuyModalVisible,
+  orderPrice,
+  clearBasket,
+}) => {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [fathersName, setFathersName] = useState("");
@@ -12,17 +18,22 @@ export const OrderForm = ({ buyModalVisible, setBuyModalVisible, orderPrice, cle
   const [deliveryMethod, setDeliveryMethod] = useState("Кур'єр");
   const [deliveryAddress, setDeliveryAddress] = useState("");
 
-  const buy = async () => {
-    const { data: rawItems } = await axios.get(SERVER_URL + "/api/basket", {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("user-token"),
-      },
-    });
+  const { user } = useContext(Context);
 
-    let items = [];
-    rawItems.map((item) =>
-      items.push({ id: item.itemId, amount: item.amount })
-    );
+  const buy = async () => {
+    if (!user.user.emailVerified) {
+      alert(
+        "Для оформлення замовлення необхідно підтвердити свою електронну пошту."
+      );
+      return;
+    }
+
+    const items = JSON.parse(localStorage.getItem("basket")).map((item) => {
+      return {
+        id: item.id,
+        amount: item.amount,
+      };
+    });
 
     const data = {
       items,
@@ -40,6 +51,14 @@ export const OrderForm = ({ buyModalVisible, setBuyModalVisible, orderPrice, cle
       },
     });
 
+    window.Email.send({
+      SecureToken: "ce8fa461-3977-4d13-8256-4c27e3542214",
+      To: user.user.email,
+      From: "prosvita.magazyn@gmail.com",
+      Subject: "E-store Prosvita",
+      Body: "test",
+    }).then((message) => console.log(message));
+
     clearBasket();
 
     alert("Ваше замовлення в обробці");
@@ -52,7 +71,7 @@ export const OrderForm = ({ buyModalVisible, setBuyModalVisible, orderPrice, cle
       visible={buyModalVisible}
       setVisible={setBuyModalVisible}
     >
-      <p style={{fontSize: "24px", textAlign: "center"}}>Дані для доставки</p>
+      <p style={{ fontSize: "24px", textAlign: "center" }}>Дані для доставки</p>
       <div className={modalStyles.formDefault} style={{ padding: "20px 0" }}>
         <input
           value={surname}
@@ -87,7 +106,7 @@ export const OrderForm = ({ buyModalVisible, setBuyModalVisible, orderPrice, cle
             onChange={(e) => setDeliveryMethod(e.target.value)}
             name="delivery-method"
             className={modalStyles.select}
-            style={{width: "100%"}}
+            style={{ width: "100%" }}
           >
             <option>Кур'єр</option>
             <option>Відділення пошти</option>

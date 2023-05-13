@@ -126,6 +126,13 @@
   font-size: 24px;
 }
 
+.verified {
+  display: flex;
+  align-self: flex-end;
+  align-items: center;
+  gap: 5px;
+}
+
 .burger {
   width: 32px !important;
   height: 20px !important;

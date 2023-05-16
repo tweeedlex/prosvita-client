@@ -33,6 +33,13 @@ export const ItemPage = ({ isAdmin }) => {
     if (location.pathname === "/basket") {
       setItemInBasket(true);
     }
+
+    if (localStorage.getItem("basket")) {
+      const basket = JSON.parse(localStorage.getItem("basket"));
+      if (basket.find((basketItem) => basketItem.id === id)) {
+        setItemInBasket(true);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -80,7 +87,6 @@ export const ItemPage = ({ isAdmin }) => {
       );
       setAverageRating(Math.round(itemInfo.rating * 10) / 10);
       setRatingsCount(itemInfo.ratingsCount);
-      setItemInBasket(itemInfo.itemInBasket);
       setBrand(itemInfo.brand);
       setType(itemInfo.type);
     } catch (e) {
@@ -100,12 +106,10 @@ export const ItemPage = ({ isAdmin }) => {
       );
       setItemInBasket(false);
     } else {
+      item.amount = 1;
       localStorage.setItem(
         "basket",
-        JSON.stringify([
-          ...JSON.parse(localStorage.getItem("basket")),
-          { id: item.id, amount: 1 },
-        ])
+        JSON.stringify([...JSON.parse(localStorage.getItem("basket")), item])
       );
       setItemInBasket(true);
     }

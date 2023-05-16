@@ -14,8 +14,13 @@ export const Login = observer(({ isOpened, setIsOpened }) => {
   const loginHandler = async (e) => {
     try {
       e.preventDefault();
-      const credentials = await signInWithEmailAndPassword(user.auth, email, password);
-      await login(credentials.user.uid, email);
+      const credentials = await signInWithEmailAndPassword(
+        user.auth,
+        email,
+        password
+      );
+      const data = await login(credentials.user.uid, email);
+      user.setRole(data.role);
       setIsOpened(false);
       setEmail("");
       setPassword("");

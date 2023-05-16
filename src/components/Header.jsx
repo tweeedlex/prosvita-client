@@ -62,6 +62,7 @@ export const Header = observer(({ userContext }) => {
   const logOut = () => {
     localStorage.setItem("user-token", "");
     userContext.setUser({});
+    userContext.setRole("USER");
     if (userContext.auth) {
       signOut(userContext.auth).then(() => userContext.setUser(null));
     }
@@ -81,7 +82,7 @@ export const Header = observer(({ userContext }) => {
     sendEmailVerification(userContext.auth.currentUser)
       .then(() => {
         alert(
-          "На вашу електронну пошту надіслано листа з підтвердженням. Для оформлення замовлення необхідно підтвердити свою електронну пошту."
+          "На вашу електронну пошту надіслано листа з підтвердженням.\nПеревірте папку 'Спам'\nПісля підтвердження оновіть сторінку"
         );
       })
       .catch((error) => {
@@ -173,11 +174,10 @@ export const Header = observer(({ userContext }) => {
                       Надіслати лист з підтвердженням
                     </a>
                   )}
-                  <Link to="/">Мої замовлення</Link>
-                  {userContext.user.role === "ADMIN" && (
+                  {userContext.role === "ADMIN" && (
                     <Link to="/admin">Адмін-панель</Link>
                   )}
-                  {userContext.user.role === "MANAGER" && (
+                  {userContext.role === "MANAGER" && (
                     <Link to="/orders">Замовлення</Link>
                   )}
                   <a onClick={() => logOut()}>Вийти</a>

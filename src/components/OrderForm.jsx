@@ -3,6 +3,7 @@ import { Modal } from "./Modal";
 import modalStyles from "./css/Modal.module.css";
 import axios from "axios";
 import { SERVER_URL } from "../config";
+import logo from "../images/header/logo P.png";
 import { Context } from "../index";
 
 export const OrderForm = ({
@@ -11,23 +12,85 @@ export const OrderForm = ({
   orderPrice,
   clearBasket,
 }) => {
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [fathersName, setFathersName] = useState("");
+  const [telegram, setTelegram] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [deliveryMethod, setDeliveryMethod] = useState("Кур'єр");
-  const [deliveryAddress, setDeliveryAddress] = useState("");
-
+  const [sendOnVerifiedEmail, setSendOnVerifiedEmail] = useState(false);
   const { user } = useContext(Context);
 
-  const buy = async () => {
-    if (!user.user.emailVerified) {
-      alert(
-        "Для оформлення замовлення необхідно підтвердити свою електронну пошту."
-      );
-      return;
-    }
+  const formEmailBody = (order) => {
+    let email = `
+    <!DOCTYPE html>
+      <html>
+        <body style="background-color: #12451e; margin: 0; padding: 20px; font-family: 'Montserrat', sans-serif; font-size: 20px; line-height: 1.5; color: #fff;">
+          <table cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+            <tr>
+              <td>
+                <header>
+                  <a href="prosvita.netlify.app" style="text-align: center; display: block;">
+                    <img src="${logo}" style="vertical-align: middle;" />
+                    <span style="margin-left: -20px; color:#fff;">Просвіта</span>
+                  </a>
+                </header>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p style="text-align: center; color:#fff;">Добрий день! Ваше замовлення #${
+                  order.id
+                } прийняте. Дякуємо за покупку!</p>
+                <p style="text-align: center; color:#fff;">Замовлені товари:</p>
+                <hr />
+                <table style="width: 100%;" cellpadding="0" cellspacing="0">
+                  ${JSON.parse(localStorage.getItem("basket"))
+                    .map(
+                      (basketItem) => `
+                      <tr>
+                        <td style="width: 115px; height: 150px; background: url(${
+                          basketItem.img
+                        }) 100% 0px / contain no-repeat;"></td>
+                        <td style="padding-left: 20px;">
+                          <p style="color: #fff;">${basketItem.name}</p>
+                          <div style="margin-top: 10px;">
+                            <div style="margin-right: 30px;">
+                              <p style="color: #fff;">${
+                                basketItem.type.name
+                              }</p>
+                              <p style="color: #fff;">${
+                                basketItem.brand.name
+                              }</p>
+                            </div>
+                            <p style="margin-right: 30px; color: #fff;">Кількість: ${
+                              basketItem.amount
+                            } шт.</p>
+                            <p style="margin-right: 30px; color: #fff;">Вартість: ${
+                              basketItem.amount * basketItem.price
+                            } грн (${basketItem.price} грн x ${
+                        basketItem.amount
+                      } шт.)</p>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" style="padding-top: 20px;">
+                          <hr style="border-top: 1px solid #fff;">
+                        </td>
+                      </tr>
+                    `
+                    )
+                    .join("")}
+                </table>
+                <footer style="margin: 20px; text-align: center;">До сплати: ${orderPrice}₴</footer>
+              </td>
+            </tr>
+          </table>
+        </body>
+      </html>
+    `;
+    return email;
+  };
 
+  const buy = async () => {
     const items = JSON.parse(localStorage.getItem("basket")).map((item) => {
       return {
         id: item.id,
@@ -37,32 +100,44 @@ export const OrderForm = ({
 
     const data = {
       items,
-      name,
-      surname,
-      fathersName,
+      telegram,
+      email,
       phone,
-      deliveryMethod,
-      deliveryAddress,
     };
 
-    await axios.post(SERVER_URL + "/api/order", data, {
+    const { data: order } = await axios.post(SERVER_URL + "/api/order", data, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("user-token"),
       },
     });
 
+    const emailBody = formEmailBody(order);
     window.Email.send({
       SecureToken: "ce8fa461-3977-4d13-8256-4c27e3542214",
-      To: user.user.email,
+      To: sendOnVerifiedEmail ? user.user.email : email,
       From: "prosvita.magazyn@gmail.com",
       Subject: "E-store Prosvita",
-      Body: "test",
-    }).then((message) => console.log(message));
+      Body: emailBody,
+    }).then((message) => {
+      if (message === "OK") {
+        alert(
+          `Ваше замовлення в обробці.\nНа вказану пошту було відправлено квитанцію про замовлення.\nПеревірте папку "Спам"`
+        );
+      } else {
+        return alert("Помилка при відправці повідомлення на пошту");
+      }
+    });
 
     clearBasket();
-
-    alert("Ваше замовлення в обробці");
   };
+
+  const icon = document.querySelector(".icon");
+  const tooltip = document.createElement("div");
+  tooltip.classList.add("tooltip");
+  if (icon) {
+    tooltip.textContent = icon.dataset.tooltip;
+    icon.appendChild(tooltip);
+  }
 
   return (
     <Modal
@@ -71,60 +146,58 @@ export const OrderForm = ({
       visible={buyModalVisible}
       setVisible={setBuyModalVisible}
     >
-      <p style={{ fontSize: "24px", textAlign: "center" }}>Дані для доставки</p>
+      <p style={{ fontSize: "24px", textAlign: "center" }}>Дані для покупки</p>
       <div className={modalStyles.formDefault} style={{ padding: "20px 0" }}>
         <input
-          value={surname}
-          onChange={(e) => setSurname(e.target.value)}
+          value={telegram}
+          onChange={(e) => setTelegram(e.target.value)}
           type="text"
-          placeholder="Прізвище..."
+          placeholder="Telegram для зв'язку..."
           className={modalStyles.input}
         />
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          type="text"
-          placeholder="Ім'я..."
-          className={modalStyles.input}
-        />
-        <input
-          value={fathersName}
-          onChange={(e) => setFathersName(e.target.value)}
-          type="text"
-          placeholder="По батькові..."
-          className={modalStyles.input}
-        />
-        <input
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          type="tel"
-          placeholder="Телефон..."
-          className={modalStyles.input}
-        />
-        <div className={modalStyles.selectWrapper}>
-          <select
-            onChange={(e) => setDeliveryMethod(e.target.value)}
-            name="delivery-method"
-            className={modalStyles.select}
-            style={{ width: "100%" }}
-          >
-            <option>Кур'єр</option>
-            <option>Відділення пошти</option>
-          </select>
-          <div className={modalStyles.selectCheck}></div>
+        <div className={modalStyles.required}>
+          <input
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            type="tel"
+            placeholder="Телефон..."
+            className={modalStyles.input + " " + modalStyles.fullWidth}
+          />
         </div>
-
-        <input
-          value={deliveryAddress}
-          onChange={(e) => setDeliveryAddress(e.target.value)}
-          type="text"
-          placeholder={
-            deliveryMethod === "Кур'єр"
-              ? "Адреса доставки..."
-              : "Адреса поштового відділення..."
-          }
-          className={modalStyles.input}
-        />
+        <div className={modalStyles.required}>
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            placeholder="Email..."
+            className={
+              modalStyles.input +
+              " " +
+              modalStyles.fullWidth +
+              ` ${sendOnVerifiedEmail ? modalStyles.disabled : ""}`
+            }
+            readOnly={sendOnVerifiedEmail}
+          />
+        </div>
+        <div>
+          {user?.user?.emailVerified && (
+            <div
+              className={modalStyles.row}
+              style={{ gap: "10px", marginTop: "10px" }}
+            >
+              <input
+                type="checkbox"
+                id="verified"
+                value={sendOnVerifiedEmail}
+                onChange={(e) => setSendOnVerifiedEmail(e.target.checked)}
+                className={modalStyles.checkbox}
+              />
+              <label htmlFor="verified" className={modalStyles.label}>
+                Відправити квитанцію на прив'язану пошту
+              </label>
+            </div>
+          )}
+        </div>
       </div>
 
       <div
@@ -134,9 +207,23 @@ export const OrderForm = ({
           justifyContent: "space-between",
         }}
       >
-        <button onClick={() => buy()} className={modalStyles.action}>
-          Замовити
-        </button>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+          }}
+        >
+          <button onClick={() => buy()} className={modalStyles.action}>
+            Замовити
+          </button>
+          <div
+            className="icon"
+            data-tooltip="Рекомендується використовувати пошту Gmail"
+          >
+            i
+          </div>
+        </div>
         <p>До сплати: {orderPrice}₴</p>
       </div>
     </Modal>

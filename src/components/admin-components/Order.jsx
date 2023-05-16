@@ -50,10 +50,10 @@ export const Order = ({ order }) => {
   return (
     <div className={styles.order} key={order.id}>
       <div className={styles.orderInfo}>
-        <p>{`${order.surname} ${order.name} ${order.fathersName}`}</p>
         <p>ID замовлення: {order.id}</p>
-        <p>{order.deliveryAddress}</p>
         <p>{order.phone}</p>
+        <p>{order.telegram}</p>
+        <p>{order.email}</p>
         <div className={styles.orderButtons}>
           <button
             className={"button-transparent " + styles.orderButton}

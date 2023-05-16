@@ -5,6 +5,7 @@ export default class UserStore {
     this._isAuth = false;
     this._user = {};
     this._auth = null;
+    this._role = "USER";
 
     makeAutoObservable(this);
   }
@@ -18,6 +19,9 @@ export default class UserStore {
   setAuth(auth) {
     this._auth = auth;
   }
+  setRole(role) {
+    this._role = role;
+  }
 
   get isAuth() {
     return this._isAuth;
@@ -27,5 +31,8 @@ export default class UserStore {
   }
   get auth() {
     return this._auth;
+  }
+  get role() {
+    return this._role;
   }
 }

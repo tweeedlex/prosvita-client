@@ -20,7 +20,7 @@ const App = observer(() => {
   useEffect(() => {
     check().then((data) => {
       userContext.setIsAuth(true);
-      userContext.setUser(data);
+      userContext.setRole(data.role);
     });
     fetchTypes().then((data) => item.setTypes(data));
     fetchBrands().then((data) => item.setBrands(data));
@@ -52,10 +52,10 @@ const App = observer(() => {
             path="/item/:id"
             element={<ItemPage isAdmin={userContext?.role === "ADMIN"} />}
           />
-          {userContext.user?.role === "ADMIN" && (
+          {userContext.role === "ADMIN" && (
             <Route path="/admin" element={<AdminPage />} />
           )}
-          {userContext.user?.role === "MANAGER" && (
+          {userContext.role === "MANAGER" && (
             <Route path="/orders" element={<OrdersPage />} />
           )}
         </Routes>

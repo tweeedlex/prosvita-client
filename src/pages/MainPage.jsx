@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Brands } from "../components/Brands";
 import { Item } from "../components/Item";
 import axios from "axios";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { SERVER_URL } from "../config";
 import { Types } from "../components/Types";
 import { useLocation } from "react-router-dom";
@@ -108,11 +109,19 @@ export const MainPage = observer(() => {
           </div>
           <div className={styles.category}>
             <h3>Типи</h3>
-            <Types setSearchValue={setSearchValue} setSelectedPage={setSelectedPage} setPages={setPages} />
+            <Types
+              setSearchValue={setSearchValue}
+              setSelectedPage={setSelectedPage}
+              setPages={setPages}
+            />
           </div>
           <div className={styles.category}>
             <h3>Викладачі</h3>
-            <Brands setSearchValue={setSearchValue} setSelectedPage={setSelectedPage} setPages={setPages} />
+            <Brands
+              setSearchValue={setSearchValue}
+              setSelectedPage={setSelectedPage}
+              setPages={setPages}
+            />
           </div>
           <button onClick={() => resetFilters()} className={styles.reset}>
             Скинути
@@ -127,7 +136,13 @@ export const MainPage = observer(() => {
                 <div className="loading"></div>
               </div>
             ) : item.items?.length ? (
-              item.items.map((item) => <Item key={item.id} item={item} />)
+              <TransitionGroup className={styles.cards}>
+                {item.items.map((item) => (
+                  <CSSTransition key={item.id} timeout={400} classNames="item">
+                    <Item item={item} />
+                  </CSSTransition>
+                ))}
+              </TransitionGroup>
             ) : (
               <p>Відстуні товари за Вашими фільтрами</p>
             )}

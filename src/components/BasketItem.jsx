@@ -10,7 +10,7 @@ export const BasketItem = ({ item, setBasketModalVisible }) => {
   const updateAmount = async (action) => {
     let basket = JSON.parse(localStorage.getItem("basket"));
     const localItem = basket.find((basketItem) => basketItem.id === item.id);
-    
+
     if (action === "+" && amount < 999) {
       setAmount(amount + 1);
       localItem.amount = amount + 1;
@@ -49,12 +49,12 @@ export const BasketItem = ({ item, setBasketModalVisible }) => {
               to={`/item/${item.id}`}
               className={styles.itemName}
             >
-              {item.name}
+              {item?.name}
             </Link>
             <div className={styles.itemActions}>
               <div className={styles.categories}>
-                <p>{item.brand.name}</p>
-                <p>{item.type.name}</p>
+                <p>{item.brand?.name}</p>
+                <p>{item.type?.name}</p>
               </div>
               <div className={styles.amount}>
                 <div>

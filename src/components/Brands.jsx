@@ -4,14 +4,11 @@ import { Context } from "../index";
 import styles from "./css/Category.module.css";
 import { observer } from "mobx-react-lite";
 
-export const Brands = observer(({
-  setSelectedPage,
-  setSearchValue
-}) => {
+export const Brands = observer(({ setSelectedPage, setSearchValue }) => {
   const { item } = useContext(Context);
 
   const selectBrand = async (id) => {
-    item.setSelectedBrand({id});
+    item.setSelectedBrand({ id });
     setSelectedPage(1);
     setSearchValue("");
   };
@@ -26,9 +23,9 @@ export const Brands = observer(({
           }`}
         >
           <button onClick={() => selectBrand(brand.id)}>
-            {brand.name.length < 20
+            {brand.name.length < 33
               ? brand.name
-              : `${brand.name.substr(0, 20)}..`}
+              : `${brand.name.substr(0, 27)}..`}
           </button>
         </li>
       ))}

@@ -1,6 +1,7 @@
 import React, { createContext } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import "./animations.css";
 import "./pagination.css";
 import "./swiper.css";
 import App from "./App";

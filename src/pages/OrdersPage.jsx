@@ -4,6 +4,7 @@ import { Order } from "../components/admin-components/Order";
 import { SERVER_URL } from "../config";
 import { countAndSetPages } from "../utils/countAndSetPages";
 import styles from "./css/OrdersPage.module.css";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 export const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
@@ -35,7 +36,7 @@ export const OrdersPage = () => {
     }
 
     setOrders(response.data.rows);
-    countAndSetPages(response, setPages, 10);
+    countAndSetPages(response.data.count, setPages, 10);
   };
 
   const changePage = async (page) => {
@@ -53,18 +54,28 @@ export const OrdersPage = () => {
     <div className={styles.ordersPage + " container"}>
       <h2>Замовлення</h2>
       <div className={styles.buttons}>
-        <button className="button-transparent" onClick={() => loadOrders(true)}>Виконані</button>
-        <button className="button-transparent" onClick={() => loadOrders(false)}>Невиконані</button>
-        <button className="button-transparent" onClick={() => loadOrders()}>Скинути</button>
+        <button className="button-transparent" onClick={() => loadOrders(true)}>
+          Виконані
+        </button>
+        <button
+          className="button-transparent"
+          onClick={() => loadOrders(false)}
+        >
+          Невиконані
+        </button>
+        <button className="button-transparent" onClick={() => loadOrders()}>
+          Скинути
+        </button>
       </div>
-
-      <div className={styles.orders}>
+      <TransitionGroup className={styles.orders}>
         {orders.map((order) => (
-          <Order key={order.id} order={order} />
+          <CSSTransition key={order.id} timeout={200} classNames="item">
+            <Order order={order} />
+          </CSSTransition>
         ))}
-      </div>
-
+      </TransitionGroup>
       <ul className="pagination">
+        {console.log(pages)}
         {pages.length > 1 &&
           pages.map((page) => (
             <li

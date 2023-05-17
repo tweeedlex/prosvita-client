@@ -43,10 +43,7 @@ export const Item = observer(({ item }) => {
       item.amount = 1;
       localStorage.setItem(
         "basket",
-        JSON.stringify([
-          ...JSON.parse(localStorage.getItem("basket")),
-          item,
-        ])
+        JSON.stringify([...JSON.parse(localStorage.getItem("basket")), item])
       );
       setItemInBasket(true);
     }
@@ -79,7 +76,9 @@ export const Item = observer(({ item }) => {
           <div className={styles.bottom}>
             <p>{item.price}₴</p>
             <button
-              className={itemInBasket ? styles.inCart : ""}
+              className={
+                (itemInBasket ? styles.inCart : "") + " " + styles.cart
+              }
               onClick={() => toggleInCart()}
             >
               <img src={cartImage} alt="cart" />

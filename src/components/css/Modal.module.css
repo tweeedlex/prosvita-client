@@ -16,7 +16,7 @@
 
 .form {
   min-width: 500px;
-  max-height: 70vh;
+  max-height: 80vh;
   padding: 20px;
   background: linear-gradient(231.77deg, #1e5c2c 39.01%, #12451e 97.94%);
   border-radius: 40px;
@@ -129,7 +129,6 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px;
 }
 
 label {
@@ -168,4 +167,31 @@ input[type="checkbox"]:checked::before {
 
 .disabled {
   opacity: 0.5;
+}
+
+@media (max-width: 767px) {
+  .form {
+    min-width: 280px;
+    width: 80%;
+  }
+
+  .input {
+    height: 42px;
+    font-size: 18px;
+    padding: 0 15px;
+  }
+
+  .action {
+    font-size: 18px;
+  }
+
+  .form {
+    max-height: calc(100vh-20px);
+  }
+}
+
+.fwrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }

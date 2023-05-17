@@ -28,8 +28,8 @@
 }
 
 .p {
-    text-align: center;
-    margin: 20px 0 0 0;
+  text-align: center;
+  margin: 20px 0 0 0;
 }
 
 .items::before,
@@ -139,4 +139,56 @@
 .price {
   font-weight: 500;
   font-size: 28px;
+}
+
+@media (max-width: 767px) {
+  .item {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 100%;
+  }
+
+  .itemName {
+    text-align: center;
+    min-width: 100%;
+  }
+
+  .categories,
+  .amount {
+    width: unset;
+  }
+
+  .amount {
+    flex: 0 0 auto;
+  }
+
+  .categories p {
+    font-size: 16px;
+  }
+
+  .itemInfo {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 479px) {
+  .buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .itemActions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .itemActions * {
+    text-align: center;
+  }
+
+  .money {
+    align-items: center;
+    flex-direction: column-reverse;
+  }
 }

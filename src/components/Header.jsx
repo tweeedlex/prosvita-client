@@ -110,7 +110,15 @@ export const Header = observer(({ userContext }) => {
           <nav className={styles.navigation}>
             <ul>
               <li className={location.pathname === "/" ? styles.active : ""}>
-                <Link to="/">Головна</Link>
+                <Link
+                  to="/"
+                  onClick={() => {
+                    setIsMenuActive(false);
+                    html.classList.remove("locked");
+                  }}
+                >
+                  Головна
+                </Link>
                 <span className={styles.hoverline}></span>
               </li>
               <li>
@@ -119,6 +127,10 @@ export const Header = observer(({ userContext }) => {
                   className={
                     location.pathname === "/catalog" ? styles.active : ""
                   }
+                  onClick={() => {
+                    setIsMenuActive(false);
+                    html.classList.remove("locked");
+                  }}
                 >
                   Каталог
                 </Link>

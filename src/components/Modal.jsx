@@ -1,7 +1,14 @@
 import React, { useEffect } from "react";
 import styles from "./css/Modal.module.css";
 
-export const Modal = ({ children, visible, setVisible, isBasket, zIndex, isOrder }) => {
+export const Modal = ({
+  children,
+  visible,
+  setVisible,
+  isBasket,
+  zIndex,
+  isOrder,
+}) => {
   let html = document.querySelector("html");
 
   useEffect(() => {

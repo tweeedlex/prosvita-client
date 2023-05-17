@@ -7,6 +7,7 @@ import { SERVER_URL } from "../config";
 import { Types } from "../components/Types";
 import { useLocation } from "react-router-dom";
 import searchIcon from "../images/header/search.png";
+import crossIcon from "../images/close.png";
 
 import styles from "./css/MainPage.module.css";
 import { fetchItems } from "../http/itemAPI";
@@ -76,12 +77,9 @@ export const MainPage = observer(() => {
 
   const toggleFilters = () => {
     if (areFiltersActive) {
-      setAreFiltersActive(false);
-      return (body.classList = "");
+      return setAreFiltersActive(false);
     }
     setAreFiltersActive(true);
-    console.log(body);
-    body.classList = "lock";
   };
 
   const search = async () => {
@@ -94,8 +92,27 @@ export const MainPage = observer(() => {
 
   return (
     <div className={styles.catalog}>
+      <button
+        className={styles.toggleFilters + " button-transparent"}
+        onClick={toggleFilters}
+      >
+        Фільтрація
+      </button>
       <div className={"catalog__container " + styles.container}>
-        <div className={styles.filters}>
+        <div
+          className={
+            styles.filters + " " + (areFiltersActive ? styles.visible : "")
+          }
+          onClick={(e) => (areFiltersActive ? e.stopPropagation() : null)}
+        >
+          <button className={styles.closeFilters}>
+            <img
+              src={crossIcon}
+              alt="Close"
+              width={24}
+              onClick={() => setAreFiltersActive(false)}
+            />
+          </button>
           <div className={styles.search}>
             <input
               placeholder="Пошук товарів..."

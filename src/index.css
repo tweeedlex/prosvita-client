@@ -209,3 +209,10 @@ a {
   opacity: 1;
   visibility: visible;
 }
+
+@media (max-width: 500px) {
+  .tooltip,
+  .icon {
+    display: none;
+  }
+}

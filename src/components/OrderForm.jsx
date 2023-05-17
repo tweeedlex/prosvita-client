@@ -146,8 +146,12 @@ export const OrderForm = ({
       visible={buyModalVisible}
       setVisible={setBuyModalVisible}
     >
-      <p style={{ fontSize: "24px", textAlign: "center" }}>Дані для покупки</p>
-      <div className={modalStyles.formDefault} style={{ padding: "20px 0" }}>
+      <p
+        style={{ fontSize: "24px", textAlign: "center", marginBottom: "10px" }}
+      >
+        Дані для покупки
+      </p>
+      <div className={modalStyles.formDefault} style={{ padding: "10px 0" }}>
         <input
           value={telegram}
           onChange={(e) => setTelegram(e.target.value)}
@@ -206,6 +210,7 @@ export const OrderForm = ({
           alignItems: "center",
           justifyContent: "space-between",
         }}
+        className={modalStyles.fwrap}
       >
         <div
           style={{

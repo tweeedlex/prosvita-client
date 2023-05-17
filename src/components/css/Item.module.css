@@ -42,3 +42,33 @@
   left: 8px;
   top: 2px;
 }
+
+@media (max-width: 767px) {
+  .card {
+    width: 137px;
+    height: unset;
+    background: rgba(46, 92, 56, 0.7);
+    border: 2px solid #ffffff;
+    border-radius: 25px;
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .card p {
+    font-size: 16px;
+  }
+
+  .image {
+    height: 100px;
+    width: 130px;
+  }
+
+  .cart img {
+    width: 28px;
+  }
+
+  .inCart::after {
+    left: 6px;
+    top: 0;
+  }
+}

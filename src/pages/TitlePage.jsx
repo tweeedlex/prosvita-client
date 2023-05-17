@@ -37,7 +37,7 @@ export const TitlePage = () => {
       <img className={styles.transition} src={transition} alt="" />
 
       <section className={styles.catalog}>
-        <div className="catalog__container">
+        <div className={"catalog__container" + " " + styles.catalogContainer}>
           <h2 className={styles.h2}>Широкий асортимент товарів</h2>
           <div className={styles.cards}>
             <Link
@@ -74,10 +74,10 @@ export const TitlePage = () => {
       />
 
       <section id="about" className={styles.about}>
-        <div className="about__container">
+        <div className={"about__container" + " " + styles.aboutContainer}>
           <h2 className={styles.h2}>Про нас</h2>
           <div className={styles.aboutContent}>
-            <p>
+            <p className={styles.p}>
               "Просвіта" - це інтернет-магазин освітніх товарів та послуг, який
               пропонує вам легкий доступ до широкого асортименту продукції за
               допомогою зручного замовлення з дому.

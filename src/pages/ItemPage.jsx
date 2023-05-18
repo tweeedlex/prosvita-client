@@ -134,7 +134,7 @@ export const ItemPage = ({ isAdmin }) => {
       <div className={styles.container + " item__container"}>
         <div
           className={styles.image}
-          style={{ background: `url(${item.img}) 100% 0/contain no-repeat` }}
+          style={{ background: `url(${item.img}) 50% 0/contain no-repeat` }}
         ></div>
         <div className={styles.content}>
           <h2 className={styles.h2}>{item.name}</h2>

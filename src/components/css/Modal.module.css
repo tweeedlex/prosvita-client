@@ -175,7 +175,8 @@ input[type="checkbox"]:checked::before {
     width: 80%;
   }
 
-  .input {
+  .input,
+  .select {
     height: 42px;
     font-size: 18px;
     padding: 0 15px;
@@ -187,6 +188,15 @@ input[type="checkbox"]:checked::before {
 
   .form {
     max-height: calc(100vh-20px);
+  }
+
+  .selectCheck {
+    top: 15px;
+  }
+
+  .label {
+    font-size: 16px;
+    margin-left: 5px;
   }
 }
 

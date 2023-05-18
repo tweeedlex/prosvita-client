@@ -276,5 +276,11 @@
     max-width: 280px;
     min-width: 280px;
     border-radius: 20px;
+    padding: 10px;
+  }
+
+  .popUpContent *,
+  .popUpContentUnlogined * {
+    font-size: 16px;
   }
 }

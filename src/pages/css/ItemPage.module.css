@@ -31,7 +31,6 @@
 .shortInfo {
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
 }
 
 .leftColumn {
@@ -184,6 +183,14 @@
   .buy {
     flex-direction: row;
   }
+
+  .info {
+    align-items: center;
+  }
+
+  .info * {
+    text-align: center;
+  }
 }
 
 @media (max-width: 767px) {
@@ -194,13 +201,6 @@
     padding: 0 0 40px 0;
   }
 
-  .image {
-    border-radius: 0;
-    width: 400px;
-  }
-}
-
-@media (max-width: 767px) {
   .image {
     border-radius: 0;
     width: 100%;

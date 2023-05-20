@@ -58,6 +58,7 @@ export const MainPage = observer(() => {
     item.setSelectedBrand(null);
     item.setSelectedType(null);
     setSearchValue("");
+    window.location.hash = "";
   };
 
   const changePage = async (page) => {

@@ -199,19 +199,12 @@ export const ItemPage = ({ isAdmin }) => {
             <div className={styles.buy}>
               <p className={styles.price}>{item.price}₴</p>
 
-              {isAuth ? (
-                <button
-                  className={itemInBasket ? styles.inCart : ""}
-                  onClick={() => toggleInCart()}
-                >
-                  <img src={cartImage} alt="cart" />
-                </button>
-              ) : (
-                <button onClick={() => alert("Авторизуйтесь")}>
-                  <p>В кошик</p>
-                  <img src={cartImage} alt="cart" />
-                </button>
-              )}
+              <button
+                className={itemInBasket ? styles.inCart : ""}
+                onClick={() => toggleInCart()}
+              >
+                <img src={cartImage} alt="cart" />
+              </button>
             </div>
           </div>
 

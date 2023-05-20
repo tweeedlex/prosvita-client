@@ -14,6 +14,7 @@ import { fetchItems } from "../http/itemAPI";
 
 import { Context } from "../index";
 import { observer } from "mobx-react-lite";
+import { countAndSetPages } from "../utils/countAndSetPages";
 
 export const MainPage = observer(() => {
   const [pages, setPages] = useState([]);
@@ -42,6 +43,7 @@ export const MainPage = observer(() => {
       item.setItems(data.rows);
       item.setTotalCount(data.count);
       setIsLoading(false);
+      countAndSetPages(+data.count, setPages, 24);
     });
   }, [item.page, item.selectedType, item.selectedBrand]);
 
@@ -63,11 +65,12 @@ export const MainPage = observer(() => {
 
   const changePage = async (page) => {
     setSelectedPage(page);
-    const response = await axios.get(`
-      ${SERVER_URL}/api/item?page=${page}
-      ${item.selectedBrand ? `&brandId=${item.selectedBrand.id}` : ""}
-      ${item.selectedType ? `&typeId=${item.selectedType.id}` : ""}
-    `);
+    console.log(item.selectedBrand?.id);
+    const response = await axios.get(
+      `${SERVER_URL}/api/item?page=${page}&limit=24` +
+        (item.selectedBrand?.id ? `&brandId=${item?.selectedBrand?.id}` : "") +
+        (item.selectedType?.id ? `&typeId=${item?.selectedType?.id}` : "")
+    );
     item.setItems(response.data.rows);
     window.scroll(0, 0);
   };
@@ -89,6 +92,7 @@ export const MainPage = observer(() => {
       `);
     item.setItems(response.data?.rows);
     item.setTotalCount(response.data?.count);
+    countAndSetPages(response.data?.count, setPages, 24);
   };
 
   return (

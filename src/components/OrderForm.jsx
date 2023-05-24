@@ -170,7 +170,7 @@ export const OrderForm = ({
         </div>
         <div className={modalStyles.required}>
           <input
-            value={email}
+            value={(sendOnVerifiedEmail ? user?.user?.email : "") || email}
             onChange={(e) => setEmail(e.target.value)}
             type="text"
             placeholder="Email..."

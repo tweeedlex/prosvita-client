@@ -65,7 +65,6 @@ export const MainPage = observer(() => {
 
   const changePage = async (page) => {
     setSelectedPage(page);
-    console.log(item.selectedBrand?.id);
     const response = await axios.get(
       `${SERVER_URL}/api/item?page=${page}&limit=24` +
         (item.selectedBrand?.id ? `&brandId=${item?.selectedBrand?.id}` : "") +

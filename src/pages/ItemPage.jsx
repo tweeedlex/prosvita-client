@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import { SERVER_URL } from "../config";
 
 import styles from "./css/ItemPage.module.css";
 import cartImage from "../images/catalog/cart.png";
+import { Context } from "../index";
 
 export const ItemPage = ({ isAdmin }) => {
   const location = useLocation();
@@ -19,16 +20,13 @@ export const ItemPage = ({ isAdmin }) => {
   const [averageRating, setAverageRating] = useState(0);
   const [ratingsCount, setRatingsCount] = useState(0);
 
-  const [isAuth, setIsAuth] = useState(false);
   const [itemInBasket, setItemInBasket] = useState(false);
+
+  const { user } = useContext(Context);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem("user-token")) {
-      setIsAuth(true);
-    }
-
     loadItem();
     if (location.pathname === "/basket") {
       setItemInBasket(true);
@@ -49,7 +47,7 @@ export const ItemPage = ({ isAdmin }) => {
   }, [rating]);
 
   const rateItem = async () => {
-    if (!isAuth) {
+    if (!user.user?.email) {
       return alert("Авторизуйтесь для оцінки товару");
     }
     try {

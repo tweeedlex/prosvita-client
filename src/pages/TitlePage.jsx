@@ -7,8 +7,9 @@ import transition2 from "../images/transition2.png";
 import groupImage from "../images/about/group.png";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../index";
+import { observer } from "mobx-react-lite";
 
-export const TitlePage = () => {
+export const TitlePage = observer(() => {
   const navigate = useNavigate();
   const { item } = useContext(Context);
 
@@ -98,4 +99,4 @@ export const TitlePage = () => {
       </section>
     </>
   );
-};
+});

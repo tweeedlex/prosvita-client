@@ -91,6 +91,18 @@ export const OrderForm = ({
   };
 
   const buy = async () => {
+    // email and phone validation by regexp
+    const emailRegexp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const phoneRegexp = /^\+?3?8?(0\d{9})$/;
+
+    if (!phoneRegexp.test(phone)) {
+      return alert("Введіть коректний номер телефону");
+    }
+    
+    if (!emailRegexp.test(email)) {
+      return alert("Введіть коректний email");
+    }
+
     const items = JSON.parse(localStorage.getItem("basket")).map((item) => {
       return {
         id: item.id,
@@ -98,11 +110,27 @@ export const OrderForm = ({
       };
     });
 
+    console.log(items)
+    let invalidAmount = false;
+    items.forEach(item => {
+      console.log(item.amount, typeof item.amount)
+      if (typeof item.amount !== "number" || item.amount < 1 || item.amount > 999) {
+        invalidAmount = true;
+      }
+    });
+
+    if (invalidAmount) {
+      return alert("Некоректна кількість товару");
+    }
+
+    const userId = user?.user?.uid || "";
+
     const data = {
       items,
       telegram,
       email,
       phone,
+      userId
     };
 
     const { data: order } = await axios.post(SERVER_URL + "/api/order", data, {
@@ -124,7 +152,7 @@ export const OrderForm = ({
           `Ваше замовлення в обробці.\nНа вказану пошту було відправлено квитанцію про замовлення.\nПеревірте папку "Спам"`
         );
       } else {
-        return alert("Помилка при відправці повідомлення на пошту");
+        return alert("Помилка при відправленні повідомлення на пошту");
       }
     });
 

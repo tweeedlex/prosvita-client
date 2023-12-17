@@ -6,6 +6,7 @@ import { observer } from "mobx-react-lite";
 import { useContext, useEffect } from "react";
 import { AdminPage } from "./pages/AdminPage";
 import { OrdersPage } from "./pages/OrdersPage";
+import { Profile } from "./pages/Profile";
 import { TitlePage } from "./pages/TitlePage";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
@@ -48,6 +49,7 @@ const App = observer(() => {
         <Routes>
           <Route path="/" element={<TitlePage />} />
           <Route path="/catalog" element={<MainPage />} />
+          <Route path="/profile" element={<Profile />} />
           <Route
             path="/item/:id"
             element={<ItemPage isAdmin={userContext?.role === "ADMIN"} />}

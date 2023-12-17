@@ -1,0 +1,41 @@
+.h2 {
+    font-size: 32px;
+}
+
+.h3 {
+    font-size: 24px;
+    font-weight: normal;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.subtitle {
+    font-size: 18px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.orders {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 800px;
+    width: 100%;
+    margin: 20px auto;
+}
+
+@media (max-width: 768px) {
+    .h2 {
+        font-size: 24px;
+    }
+
+    .h3 {
+        font-size: 20px;
+    }
+
+    .subtitle   {
+        font-size: 16px;
+    }
+}
+

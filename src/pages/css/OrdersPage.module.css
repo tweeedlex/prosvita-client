@@ -31,6 +31,23 @@
   min-width: 610px;
 }
 
+.userOrder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: unset;
+  width: 100%;
+  max-width: 610px;
+}
+
+.userOrder * {
+  text-align: center;
+}
+
+.userOrder .orderButtons {
+  justify-content: center;
+}
+
 .orderInfo p {
   font-weight: 400;
   font-size: 20px;
@@ -96,3 +113,30 @@
   flex-direction: column;
   gap: 20px;
 }
+
+@media (max-width: 768px) {
+  .slider {
+    width: 100%;
+    height: 300px;
+  }
+
+  .slide {
+    border-radius: 10px;
+    width: 110px;
+    height: 180px;
+    padding: 10px 8px;
+  }
+
+  .item {
+    gap: 5px;
+  }
+
+  .item * {
+    font-size: 14px;
+  }
+
+  .itemImage {
+    height: 120px;
+  }
+}
+

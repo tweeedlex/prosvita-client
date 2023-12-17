@@ -25,6 +25,7 @@ export const Login = observer(({ isOpened, setIsOpened }) => {
       setEmail("");
       setPassword("");
     } catch (e) {
+      alert("Сталася помилка! Перевірте правильність введених даних.");
       console.log(e);
     }
   };

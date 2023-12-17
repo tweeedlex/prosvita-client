@@ -20,6 +20,10 @@ export const Registration = ({ isOpened, setIsOpened }) => {
         return alert("Паролі не збігаються");
       }
 
+      if (password.length > 32 || password.length < 6) {
+        return alert("Пароль має містити від 6 до 32 символів");
+      }
+
       e.preventDefault();
 
       const credentials = await createUserWithEmailAndPassword(user.auth, email, password);
@@ -27,16 +31,17 @@ export const Registration = ({ isOpened, setIsOpened }) => {
       sendEmailVerification(user.auth.currentUser)
         .then(() => {
           alert(
-            "На вашу електронну пошту надіслано листа з підтвердженням. Для оформлення замовлення необхідно підтвердити свою електронну пошту."
+            "На вашу електронну пошту надіслано листа з підтвердженням. Після підтвердження вам розблокуються додаткові функції"
           );
         })
         .catch((error) => {
           console.log(error);
-          alert(error);
+          alert("Сталася помилка! Перевірте правильність введених даних.")
         });
       setIsOpened(false);
     } catch (e) {
-      console.log(e);
+      alert("Сталася помилка! Перевірте правильність введених даних.")
+      console.log(e)
     }
   };
 
@@ -52,6 +57,7 @@ export const Registration = ({ isOpened, setIsOpened }) => {
           type="email"
           className={modalStyles.input}
         />
+        <p className={modalStyles.inputLabel}>Від 6 до 32 символів</p>
         <input
           placeholder="Пароль"
           onChange={(e) => {

@@ -186,6 +186,7 @@ export const Header = observer(({ userContext }) => {
                       Надіслати лист з підтвердженням
                     </a>
                   )}
+                  <Link to="/profile">Особистий кабінет</Link>
                   {userContext.role === "ADMIN" && (
                     <Link to="/admin">Адмін-панель</Link>
                   )}

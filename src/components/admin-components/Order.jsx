@@ -12,11 +12,28 @@ import "swiper/css/navigation";
 
 import { Keyboard, Pagination, Navigation } from "swiper";
 
-export const Order = ({ order }) => {
+export const Order = ({ order, notManager }) => {
   const [itemsModalVisible, setItemsModalVisible] = useState(false);
   const [completedModalVisible, setCompletedModalVisible] = useState(false);
   const [items, setItems] = useState([]);
   const [completed, setCompleted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const checkMobile = () => {
+    if (window.innerWidth < 768) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  }
+
+  useEffect(() => {
+    checkMobile();
+    window.addEventListener("resize", () => {
+      checkMobile();
+    });
+  }, []);
+
   let sum = 0;
 
   let itemIds = order.items.map((item) => item?.id);
@@ -48,7 +65,7 @@ export const Order = ({ order }) => {
   };
 
   return (
-    <div className={styles.order} key={order.id}>
+    <div className={`${styles.order} ${notManager === true ? styles.userOrder : ""}`} key={order.id}>
       <div className={styles.orderInfo}>
         <p>ID замовлення: {order.id}</p>
         <p>{order.phone}</p>
@@ -61,29 +78,32 @@ export const Order = ({ order }) => {
           >
             Замовлені товари
           </button>
-          {order.completed || completed ? (
-            <p>Виконано</p>
-          ) : (
-            <button
-              className={"button-transparent " + styles.orderButton}
-              onClick={() => setCompletedModalVisible(true)}
-            >
-              Позначити як виконане ✔
-            </button>
-          )}
+          {notManager === true ? null : (
+            order.completed || completed ? (
+              <p>Виконано</p>
+            ) : (
+              <button
+                className={"button-transparent " + styles.orderButton}
+                onClick={() => setCompletedModalVisible(true)}
+              >
+                Позначити як виконане ✔
+              </button>
+            ))
+          }
+          
         </div>
       </div>
 
       <div>
         <Modal visible={itemsModalVisible} setVisible={setItemsModalVisible}>
           <p className={styles.sum}>
-            Сума замовлення: {items.forEach((item) => (sum += item.price))}
+            Сума замовлення: {items.forEach((item) => (sum += item.price * order.items.find((amountItem) => amountItem.id === item.id).amount))}
             {sum}₴
           </p>
 
           <Swiper
-            slidesPerView={5}
-            spaceBetween={30}
+            slidesPerView={isMobile ? 2 : 5}
+            spaceBetween={isMobile ? 7.5 : 30}
             keyboard={{
               enabled: true,
             }}
@@ -95,7 +115,7 @@ export const Order = ({ order }) => {
             className={styles.slider}
           >
             {items.map((item) => (
-              <SwiperSlide className={styles.slide}>
+              <SwiperSlide key={item.id} className={styles.slide}>
                 <OrderItemCard
                   key={item.id}
                   item={item}
